@@ -17,7 +17,7 @@ pub const WER_FAULT_REPORTING_DISABLE_SNAPSHOT_CRASH: DWORD = 128;
 pub const WER_FAULT_REPORTING_DISABLE_SNAPSHOT_HANG: DWORD = 256;
 pub const WER_FAULT_REPORTING_CRITICAL: DWORD = 512;
 pub const WER_FAULT_REPORTING_DURABLE: DWORD = 1024;
-ENUM!{enum WER_REGISTER_FILE_TYPE {
+ENUM! {enum WER_REGISTER_FILE_TYPE {
     WerRegFileTypeUserDocument = 1,
     WerRegFileTypeOther = 2,
     WerRegFileTypeMax,
@@ -28,31 +28,13 @@ extern "system" {
         regFileType: WER_REGISTER_FILE_TYPE,
         dwFlags: DWORD,
     ) -> HRESULT;
-    pub fn WerUnregisterFile(
-        pwzFilePath: PCWSTR,
-    ) -> HRESULT;
-    pub fn WerRegisterMemoryBlock(
-        pvAddress: PVOID,
-        dwSize: DWORD,
-    ) -> HRESULT;
-    pub fn WerUnregisterMemoryBlock(
-        pvAddress: PVOID,
-    ) -> HRESULT;
-    pub fn WerSetFlags(
-        dwFlags: DWORD,
-    ) -> HRESULT;
-    pub fn WerGetFlags(
-        hProcess: HANDLE,
-        pdwFlags: PDWORD,
-    ) -> HRESULT;
-    pub fn WerAddExcludedApplication(
-        pwzExeName: PCWSTR,
-        bAllUsers: BOOL,
-    ) -> HRESULT;
-    pub fn WerRemoveExcludedApplication(
-        pwzExeName: PCWSTR,
-        bAllUsers: BOOL,
-    ) -> HRESULT;
+    pub fn WerUnregisterFile(pwzFilePath: PCWSTR) -> HRESULT;
+    pub fn WerRegisterMemoryBlock(pvAddress: PVOID, dwSize: DWORD) -> HRESULT;
+    pub fn WerUnregisterMemoryBlock(pvAddress: PVOID) -> HRESULT;
+    pub fn WerSetFlags(dwFlags: DWORD) -> HRESULT;
+    pub fn WerGetFlags(hProcess: HANDLE, pdwFlags: PDWORD) -> HRESULT;
+    pub fn WerAddExcludedApplication(pwzExeName: PCWSTR, bAllUsers: BOOL) -> HRESULT;
+    pub fn WerRemoveExcludedApplication(pwzExeName: PCWSTR, bAllUsers: BOOL) -> HRESULT;
     pub fn WerRegisterRuntimeExceptionModule(
         pwszOutOfProcessCallbackDll: PCWSTR,
         pContext: PVOID,

@@ -1,3 +1,8 @@
+# don't use this
+
+this is a local fork with a few changes to make it easier for my local
+development. relevant changes will be upstreamed eventually.
+
 # winapi-rs
 [![Build status](https://github.com/retep998/winapi-rs/workflows/Rust/badge.svg)](https://github.com/retep998/winapi-rs/actions)
 [![Build status](https://ci.appveyor.com/api/projects/status/i47oonf5e7qm5utq/branch/0.3?svg=true)](https://ci.appveyor.com/project/retep998/winapi-rs/branch/0.3)

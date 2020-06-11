@@ -38,38 +38,38 @@ pub const eapPropSharedStateEquivalence: DWORD = 0x10000000;
 pub const eapPropReserved: DWORD = 0x80000000;
 pub const EAP_VALUENAME_PROPERTIES: &'static str = "Properties";
 pub type EAP_SESSIONID = DWORD;
-STRUCT!{struct EAP_TYPE {
+STRUCT! {struct EAP_TYPE {
     type_: BYTE,
     dwVendorId: DWORD,
     dwVendorType: DWORD,
 }}
-STRUCT!{struct EAP_METHOD_TYPE {
+STRUCT! {struct EAP_METHOD_TYPE {
     eapType: EAP_TYPE,
     dwAuthorId: DWORD,
 }}
-STRUCT!{struct EAP_METHOD_INFO {
+STRUCT! {struct EAP_METHOD_INFO {
     eaptype: EAP_METHOD_TYPE,
     pwszAuthorName: LPWSTR,
     pwszFriendlyName: LPWSTR,
     eapProperties: DWORD,
     pInnerMethodInfo: *mut EAP_METHOD_INFO,
 }}
-STRUCT!{struct EAP_METHOD_INFO_EX {
+STRUCT! {struct EAP_METHOD_INFO_EX {
     eaptype: EAP_METHOD_TYPE,
     pwszAuthorName: LPWSTR,
     pwszFriendlyName: LPWSTR,
     eapProperties: DWORD,
     pInnerMethodInfoArray: *mut EAP_METHOD_INFO_ARRAY_EX,
 }}
-STRUCT!{struct EAP_METHOD_INFO_ARRAY {
+STRUCT! {struct EAP_METHOD_INFO_ARRAY {
     dwNumberOfMethods: DWORD,
     pEapMethods: *mut EAP_METHOD_INFO,
 }}
-STRUCT!{struct EAP_METHOD_INFO_ARRAY_EX {
+STRUCT! {struct EAP_METHOD_INFO_ARRAY_EX {
     dwNumberOfMethods: DWORD,
     pEapMethods: *mut EAP_METHOD_INFO_EX,
 }}
-STRUCT!{struct EAP_ERROR {
+STRUCT! {struct EAP_ERROR {
     dwWinError: DWORD,
     type_: EAP_METHOD_TYPE,
     dwReasonCode: DWORD,
@@ -79,7 +79,7 @@ STRUCT!{struct EAP_ERROR {
     pRootCauseString: LPWSTR,
     pRepairString: LPWSTR,
 }}
-ENUM!{enum EAP_ATTRIBUTE_TYPE {
+ENUM! {enum EAP_ATTRIBUTE_TYPE {
     eatMinimum = 0,
     eatUserName = 1,
     eatUserPassword = 2,
@@ -180,13 +180,13 @@ ENUM!{enum EAP_ATTRIBUTE_TYPE {
     eatReserved = 0xFFFFFFFF,
 }}
 pub type EapAttributeType = EAP_ATTRIBUTE_TYPE;
-STRUCT!{struct EAP_ATTRIBUTE {
+STRUCT! {struct EAP_ATTRIBUTE {
     eaType: EAP_ATTRIBUTE_TYPE,
     dwLength: DWORD,
     pValue: *mut BYTE,
 }}
 pub type EapAttribute = EAP_ATTRIBUTE;
-STRUCT!{struct EAP_ATTRIBUTES {
+STRUCT! {struct EAP_ATTRIBUTES {
     dwNumberOfAttributes: DWORD,
     pAttribs: *mut EAP_ATTRIBUTE,
 }}
@@ -222,7 +222,7 @@ pub const EAP_UI_INPUT_FIELD_PROPS_NON_DISPLAYABLE: DWORD =
     EAP_CONFIG_INPUT_FIELD_PROPS_NON_DISPLAYABLE;
 pub const EAP_UI_INPUT_FIELD_PROPS_NON_PERSIST: DWORD = 0x00000002;
 pub const EAP_UI_INPUT_FIELD_PROPS_READ_ONLY: DWORD = 0x00000004;
-ENUM!{enum EAP_CONFIG_INPUT_FIELD_TYPE {
+ENUM! {enum EAP_CONFIG_INPUT_FIELD_TYPE {
     EapConfigInputUsername = 0,
     EapConfigInputPassword = 1,
     EapConfigInputNetworkUsername = 2,
@@ -240,7 +240,7 @@ pub const EAPHOST_PEER_API_VERSION: i32 = 1;
 pub const EAPHOST_METHOD_API_VERSION: i32 = 1;
 pub const MAX_EAP_CONFIG_INPUT_FIELD_LENGTH: i32 = 256;
 pub const MAX_EAP_CONFIG_INPUT_FIELD_VALUE_LENGTH: i32 = 1024;
-STRUCT!{struct EAP_CONFIG_INPUT_FIELD_DATA {
+STRUCT! {struct EAP_CONFIG_INPUT_FIELD_DATA {
     dwSize: DWORD,
     Type: EAP_CONFIG_INPUT_FIELD_TYPE,
     dwFlagProps: DWORD,
@@ -250,13 +250,13 @@ STRUCT!{struct EAP_CONFIG_INPUT_FIELD_DATA {
     dwMaxDataLength: DWORD,
 }}
 pub type PEAP_CONFIG_INPUT_FIELD_DATA = *mut EAP_CONFIG_INPUT_FIELD_DATA;
-STRUCT!{struct EAP_CONFIG_INPUT_FIELD_ARRAY {
+STRUCT! {struct EAP_CONFIG_INPUT_FIELD_ARRAY {
     dwVersion: DWORD,
     dwNumberOfFields: DWORD,
     pFields: *mut EAP_CONFIG_INPUT_FIELD_DATA,
 }}
 pub type PEAP_CONFIG_INPUT_FIELD_ARRAY = *mut EAP_CONFIG_INPUT_FIELD_ARRAY;
-ENUM!{enum EAP_INTERACTIVE_UI_DATA_TYPE {
+ENUM! {enum EAP_INTERACTIVE_UI_DATA_TYPE {
     EapCredReq = 0,
     EapCredResp = 1,
     EapCredExpiryReq = 2,
@@ -268,25 +268,25 @@ pub type EAP_CRED_REQ = EAP_CONFIG_INPUT_FIELD_ARRAY;
 pub type EAP_CRED_RESP = EAP_CONFIG_INPUT_FIELD_ARRAY;
 pub type EAP_CRED_LOGON_REQ = EAP_CONFIG_INPUT_FIELD_ARRAY;
 pub type EAP_CRED_LOGON_RESP = EAP_CONFIG_INPUT_FIELD_ARRAY;
-STRUCT!{struct EAP_CRED_EXPIRY_REQ {
+STRUCT! {struct EAP_CRED_EXPIRY_REQ {
     curCreds: EAP_CONFIG_INPUT_FIELD_ARRAY,
     newCreds: EAP_CONFIG_INPUT_FIELD_ARRAY,
 }}
 pub type EAP_CRED_EXPIRY_RESP = EAP_CRED_EXPIRY_REQ;
-UNION!{union EAP_UI_DATA_FORMAT {
+UNION! {union EAP_UI_DATA_FORMAT {
     [usize; 1],
     credData credData_mut: *mut EAP_CRED_REQ,
     credExpiryData credExpiryData_mut: *mut EAP_CRED_EXPIRY_REQ,
     credLogonData credLogonData_mut: *mut EAP_CRED_LOGON_REQ,
 }}
-STRUCT!{struct EAP_INTERACTIVE_UI_DATA {
+STRUCT! {struct EAP_INTERACTIVE_UI_DATA {
     dwVersion: DWORD,
     dwSize: DWORD,
     dwDataType: EAP_INTERACTIVE_UI_DATA_TYPE,
     cbUiData: DWORD,
     pbUiData: EAP_UI_DATA_FORMAT,
 }}
-ENUM!{enum EAP_METHOD_PROPERTY_TYPE {
+ENUM! {enum EAP_METHOD_PROPERTY_TYPE {
     emptPropCipherSuiteNegotiation = 0,
     emptPropMutualAuth = 1,
     emptPropIntegrity = 2,
@@ -319,39 +319,39 @@ ENUM!{enum EAP_METHOD_PROPERTY_TYPE {
     emptLegacyMethodPropertyFlag = 31,
     emptPropVendorSpecific = 255,
 }}
-ENUM!{enum EAP_METHOD_PROPERTY_VALUE_TYPE {
+ENUM! {enum EAP_METHOD_PROPERTY_VALUE_TYPE {
     empvtBool = 0,
     empvtDword = 1,
     empvtString = 2,
 }}
-STRUCT!{struct EAP_METHOD_PROPERTY_VALUE_BOOL {
+STRUCT! {struct EAP_METHOD_PROPERTY_VALUE_BOOL {
     length: DWORD,
     value: BOOL,
 }}
-STRUCT!{struct EAP_METHOD_PROPERTY_VALUE_DWORD {
+STRUCT! {struct EAP_METHOD_PROPERTY_VALUE_DWORD {
     length: DWORD,
     value: DWORD,
 }}
-STRUCT!{struct EAP_METHOD_PROPERTY_VALUE_STRING {
+STRUCT! {struct EAP_METHOD_PROPERTY_VALUE_STRING {
     length: DWORD,
     value: *mut BYTE,
 }}
-UNION!{union EAP_METHOD_PROPERTY_VALUE {
+UNION! {union EAP_METHOD_PROPERTY_VALUE {
     [usize; 2],
     empvBool empvBool_mut: EAP_METHOD_PROPERTY_VALUE_BOOL,
     empvDword empvDword_mut: EAP_METHOD_PROPERTY_VALUE_DWORD,
     empvString empvString_mut: EAP_METHOD_PROPERTY_VALUE_STRING,
 }}
-STRUCT!{struct EAP_METHOD_PROPERTY {
+STRUCT! {struct EAP_METHOD_PROPERTY {
     eapMethodPropertyType: EAP_METHOD_PROPERTY_TYPE,
     eapMethodPropertyValueType: EAP_METHOD_PROPERTY_VALUE_TYPE,
     eapMethodPropertyValue: EAP_METHOD_PROPERTY_VALUE,
 }}
-STRUCT!{struct EAP_METHOD_PROPERTY_ARRAY {
+STRUCT! {struct EAP_METHOD_PROPERTY_ARRAY {
     dwNumberOfProperties: DWORD,
     pMethodProperty: *mut EAP_METHOD_PROPERTY,
 }}
-STRUCT!{struct EAPHOST_IDENTITY_UI_PARAMS {
+STRUCT! {struct EAPHOST_IDENTITY_UI_PARAMS {
     eapMethodType: EAP_METHOD_TYPE,
     dwFlags: DWORD,
     dwSizeofConnectionData: DWORD,
@@ -364,7 +364,7 @@ STRUCT!{struct EAPHOST_IDENTITY_UI_PARAMS {
     dwError: DWORD,
     pEapError: *mut EAP_ERROR,
 }}
-STRUCT!{struct EAPHOST_INTERACTIVE_UI_PARAMS {
+STRUCT! {struct EAPHOST_INTERACTIVE_UI_PARAMS {
     dwSizeofContextData: DWORD,
     pContextData: *mut BYTE,
     dwSizeofInteractiveUIData: DWORD,
@@ -372,32 +372,32 @@ STRUCT!{struct EAPHOST_INTERACTIVE_UI_PARAMS {
     dwError: DWORD,
     pEapError: *mut EAP_ERROR,
 }}
-ENUM!{enum EapCredentialType {
+ENUM! {enum EapCredentialType {
     EAP_EMPTY_CREDENTIAL = 0,
     EAP_USERNAME_PASSWORD_CREDENTIAL = 1,
     EAP_WINLOGON_CREDENTIAL = 2,
     EAP_CERTIFICATE_CREDENTIAL = 3,
     EAP_SIM_CREDENTIAL = 4,
 }}
-STRUCT!{struct EapUsernamePasswordCredential {
+STRUCT! {struct EapUsernamePasswordCredential {
     username: LPWSTR,
     password: LPWSTR,
 }}
 pub const CERTIFICATE_HASH_LENGTH: usize = 20;
-STRUCT!{struct EapCertificateCredential {
+STRUCT! {struct EapCertificateCredential {
     certHash: [BYTE; CERTIFICATE_HASH_LENGTH],
     password: LPWSTR,
 }}
-STRUCT!{struct EapSimCredential {
+STRUCT! {struct EapSimCredential {
     iccID: LPWSTR,
 }}
-UNION!{union EapCredentialTypeData {
+UNION! {union EapCredentialTypeData {
     [u32; 6] [u64; 4],
     username_password username_password_mut: EapUsernamePasswordCredential,
     certificate certificate_mut: EapCertificateCredential,
     sim sim_mut: EapSimCredential,
 }}
-STRUCT!{struct EapCredential {
+STRUCT! {struct EapCredential {
     credType: EapCredentialType,
     credData: EapCredentialTypeData,
 }}

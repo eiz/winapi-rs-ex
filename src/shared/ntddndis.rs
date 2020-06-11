@@ -7,14 +7,14 @@ use ctypes::c_int;
 use shared::ifdef::IF_MAX_STRING_SIZE;
 use shared::minwindef::{UCHAR, USHORT};
 //290
-STRUCT!{struct NDIS_OBJECT_HEADER {
+STRUCT! {struct NDIS_OBJECT_HEADER {
     Type: UCHAR,
     Revision: UCHAR,
     Size: USHORT,
 }}
 pub type PNDIS_OBJECT_HEADER = *mut NDIS_OBJECT_HEADER;
 //2274
-ENUM!{enum NDIS_MEDIUM {
+ENUM! {enum NDIS_MEDIUM {
     NdisMedium802_3 = 0,
     NdisMedium802_5 = 1,
     NdisMediumFddi = 2,
@@ -38,7 +38,7 @@ ENUM!{enum NDIS_MEDIUM {
     NdisMediumMax = 20,
 }}
 pub type PNDIS_MEDIUM = *mut NDIS_MEDIUM;
-ENUM!{enum NDIS_PHYSICAL_MEDIUM {
+ENUM! {enum NDIS_PHYSICAL_MEDIUM {
     NdisPhysicalMediumUnspecified = 0,
     NdisPhysicalMediumWirelessLan = 1,
     NdisPhysicalMediumCableModem = 2,

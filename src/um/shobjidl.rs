@@ -13,21 +13,21 @@ use um::unknwnbase::{IUnknown, IUnknownVtbl};
 use um::winnt::{HRESULT, LPCWSTR, LPWSTR, WCHAR};
 pub type IFileOperationProgressSink = IUnknown; // TODO
 pub use um::shobjidl_core::{IShellItemArray, SIATTRIBFLAGS}; // FIXME: Remove these in the next major release
-ENUM!{enum FDE_OVERWRITE_RESPONSE {
+ENUM! {enum FDE_OVERWRITE_RESPONSE {
     FDEOR_DEFAULT = 0,
     FDEOR_ACCEPT = 1,
     FDEOR_REFUSE = 2,
 }}
-ENUM!{enum FDE_SHAREVIOLATION_RESPONSE {
+ENUM! {enum FDE_SHAREVIOLATION_RESPONSE {
     FDESVR_DEFAULT = 0,
     FDESVR_ACCEPT = 1,
     FDESVR_REFUSE = 2,
 }}
-ENUM!{enum FDAP {
+ENUM! {enum FDAP {
     FDAP_BOTTOM = 0,
     FDAP_TOP = 1,
 }}
-RIDL!{#[uuid(0x973510db, 0x7d7f, 0x452b, 0x89, 0x75, 0x74, 0xa8, 0x58, 0x28, 0xd3, 0x54)]
+RIDL! {#[uuid(0x973510db, 0x7d7f, 0x452b, 0x89, 0x75, 0x74, 0xa8, 0x58, 0x28, 0xd3, 0x54)]
 interface IFileDialogEvents(IFileDialogEventsVtbl): IUnknown(IUnknownVtbl) {
     fn OnFileOk(
         pfd: *mut IFileDialog,
@@ -56,7 +56,7 @@ interface IFileDialogEvents(IFileDialogEventsVtbl): IUnknown(IUnknownVtbl) {
         pResponse: *mut FDE_OVERWRITE_RESPONSE,
     ) -> HRESULT,
 }}
-ENUM!{enum FILEOPENDIALOGOPTIONS {
+ENUM! {enum FILEOPENDIALOGOPTIONS {
     FOS_OVERWRITEPROMPT = 0x2,
     FOS_STRICTFILETYPES = 0x4,
     FOS_NOCHANGEDIR = 0x8,
@@ -80,7 +80,7 @@ ENUM!{enum FILEOPENDIALOGOPTIONS {
     FOS_FORCEPREVIEWPANEON = 0x40000000,
     FOS_SUPPORTSTREAMABLEITEMS = 0x80000000,
 }}
-RIDL!{#[uuid(0x42f85136, 0xdb7e, 0x439c, 0x85, 0xf1, 0xe4, 0x07, 0x5d, 0x13, 0x5f, 0xc8)]
+RIDL! {#[uuid(0x42f85136, 0xdb7e, 0x439c, 0x85, 0xf1, 0xe4, 0x07, 0x5d, 0x13, 0x5f, 0xc8)]
 interface IFileDialog(IFileDialogVtbl): IModalWindow(IModalWindowVtbl) {
     fn SetFileTypes(
         cFileTypes: UINT,
@@ -153,7 +153,7 @@ interface IFileDialog(IFileDialogVtbl): IModalWindow(IModalWindowVtbl) {
         pFilter: *mut IShellItemFilter,
     ) -> HRESULT,
 }}
-RIDL!{#[uuid(0x84bccd23, 0x5fde, 0x4cdb, 0xae, 0xa4, 0xaf, 0x64, 0xb8, 0x3d, 0x78, 0xab)]
+RIDL! {#[uuid(0x84bccd23, 0x5fde, 0x4cdb, 0xae, 0xa4, 0xaf, 0x64, 0xb8, 0x3d, 0x78, 0xab)]
 interface IFileSaveDialog(IFileSaveDialogVtbl): IFileDialog(IFileDialogVtbl) {
     fn SetSaveAsItem(
         psi: *mut IShellItem,
@@ -175,7 +175,7 @@ interface IFileSaveDialog(IFileSaveDialogVtbl): IFileDialog(IFileDialogVtbl) {
         pSink: *mut IFileOperationProgressSink,
     ) -> HRESULT,
 }}
-RIDL!{#[uuid(0xd57c7288, 0xd4ad, 0x4768, 0xbe, 0x02, 0x9d, 0x96, 0x95, 0x32, 0xd9, 0x60)]
+RIDL! {#[uuid(0xd57c7288, 0xd4ad, 0x4768, 0xbe, 0x02, 0x9d, 0x96, 0x95, 0x32, 0xd9, 0x60)]
 interface IFileOpenDialog(IFileOpenDialogVtbl): IFileDialog(IFileDialogVtbl) {
     fn GetResults(
         ppenum: *mut *mut IShellItemArray,
@@ -184,13 +184,13 @@ interface IFileOpenDialog(IFileOpenDialogVtbl): IFileDialog(IFileDialogVtbl) {
         ppsai: *mut *mut IShellItemArray,
     ) -> HRESULT,
 }}
-ENUM!{enum CDCONTROLSTATEF {
+ENUM! {enum CDCONTROLSTATEF {
     CDCS_INACTIVE = 0,
     CDCS_ENABLED = 0x1,
     CDCS_VISIBLE = 0x2,
     CDCS_ENABLEDVISIBLE = 0x3,
 }}
-RIDL!{#[uuid(0xe6fdd21a, 0x163f, 0x4975, 0x9c, 0x8c, 0xa6, 0x9f, 0x1b, 0xa3, 0x70, 0x34)]
+RIDL! {#[uuid(0xe6fdd21a, 0x163f, 0x4975, 0x9c, 0x8c, 0xa6, 0x9f, 0x1b, 0xa3, 0x70, 0x34)]
 interface IFileDialogCustomize(IFileDialogCustomizeVtbl): IUnknown(IUnknownVtbl) {
     fn EnableOpenDropDown(
         dwIDCtl: DWORD,
@@ -297,7 +297,7 @@ interface IFileDialogCustomize(IFileDialogCustomizeVtbl): IUnknown(IUnknownVtbl)
         pszLabel: LPCWSTR,
     ) -> HRESULT,
 }}
-RIDL!{#[uuid(0x36116642, 0xd713, 0x4b97, 0x9b, 0x83, 0x74, 0x84, 0xa9, 0xd0, 0x04, 0x33)]
+RIDL! {#[uuid(0x36116642, 0xd713, 0x4b97, 0x9b, 0x83, 0x74, 0x84, 0xa9, 0xd0, 0x04, 0x33)]
 interface IFileDialogControlEvents(IFileDialogControlEventsVtbl): IUnknown(IUnknownVtbl) {
     fn OnItemSelected(
         pfdc: *mut IFileDialogCustomize,
@@ -318,7 +318,7 @@ interface IFileDialogControlEvents(IFileDialogControlEventsVtbl): IUnknown(IUnkn
         dwIDCtl: DWORD,
     ) -> HRESULT,
 }}
-RIDL!{#[uuid(0x61744fc7, 0x85b5, 0x4791, 0xa9, 0xb0, 0x27, 0x22, 0x76, 0x30, 0x9b, 0x13)]
+RIDL! {#[uuid(0x61744fc7, 0x85b5, 0x4791, 0xa9, 0xb0, 0x27, 0x22, 0x76, 0x30, 0x9b, 0x13)]
 interface IFileDialog2(IFileDialog2Vtbl): IFileDialog(IFileDialogVtbl) {
     fn SetCancelButtonLabel(
         pszLabel: LPCWSTR,

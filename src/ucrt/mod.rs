@@ -4,4 +4,5 @@
 // All files in the project carrying such notice may not be copied, modified, or distributed
 // except according to those terms.
 // Headers for the universal C Runtime
-#[cfg(feature = "corecrt")] pub mod corecrt;
+#[cfg(feature = "corecrt")]
+pub mod corecrt;

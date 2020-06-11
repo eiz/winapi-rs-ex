@@ -5,7 +5,7 @@
 // except according to those terms.
 use shared::basetsd::DWORD_PTR;
 use shared::minwindef::{
-    BOOL, BYTE, DWORD, HKEY, LPBYTE, LPCVOID, LPDWORD, PFILETIME, PHKEY, ULONG
+    BOOL, BYTE, DWORD, HKEY, LPBYTE, LPCVOID, LPDWORD, PFILETIME, PHKEY, ULONG,
 };
 use um::minwinbase::LPSECURITY_ATTRIBUTES;
 use um::reason::{
@@ -52,14 +52,14 @@ pub const HKEY_CURRENT_USER_LOCAL_SETTINGS: HKEY = 0x80000007i32 as usize as HKE
 // PVALUEW
 // QUERYHANDLER
 // REG_PROVIDER
-STRUCT!{struct VALENTA {
+STRUCT! {struct VALENTA {
     ve_valuename: LPSTR,
     ve_valuelen: DWORD,
     ve_valueptr: DWORD_PTR,
     ve_type: DWORD,
 }}
 pub type PVALENTA = *mut VALENTA;
-STRUCT!{struct VALENTW {
+STRUCT! {struct VALENTW {
     ve_valuename: LPWSTR,
     ve_valuelen: DWORD,
     ve_valueptr: DWORD_PTR,
@@ -70,35 +70,19 @@ pub type PVALENTW = *mut VALENTW;
 pub const REG_MUI_STRING_TRUNCATE: DWORD = 0x00000001;
 pub const REG_SECURE_CONNECTION: DWORD = 1;
 extern "system" {
-    pub fn RegCloseKey(
-        hKey: HKEY,
-    ) -> LSTATUS;
-    pub fn RegOverridePredefKey(
-        hKey: HKEY,
-        hNewHKey: HKEY,
-    ) -> LSTATUS;
+    pub fn RegCloseKey(hKey: HKEY) -> LSTATUS;
+    pub fn RegOverridePredefKey(hKey: HKEY, hNewHKey: HKEY) -> LSTATUS;
     pub fn RegOpenUserClassesRoot(
         hToken: HANDLE,
         dwOptions: DWORD,
         samDesired: REGSAM,
         phkResult: PHKEY,
     ) -> LSTATUS;
-    pub fn RegOpenCurrentUser(
-        samDesired: REGSAM,
-        phkResult: PHKEY,
-    ) -> LSTATUS;
+    pub fn RegOpenCurrentUser(samDesired: REGSAM, phkResult: PHKEY) -> LSTATUS;
     pub fn RegDisablePredefinedCache() -> LSTATUS;
     pub fn RegDisablePredefinedCacheEx() -> LSTATUS;
-    pub fn RegConnectRegistryA(
-        lpMachineName: LPCSTR,
-        hKey: HKEY,
-        phkResult: PHKEY,
-    ) -> LSTATUS;
-    pub fn RegConnectRegistryW(
-        lpMachineName: LPCWSTR,
-        hKey: HKEY,
-        phkResult: PHKEY,
-    ) -> LSTATUS;
+    pub fn RegConnectRegistryA(lpMachineName: LPCSTR, hKey: HKEY, phkResult: PHKEY) -> LSTATUS;
+    pub fn RegConnectRegistryW(lpMachineName: LPCWSTR, hKey: HKEY, phkResult: PHKEY) -> LSTATUS;
     pub fn RegConnectRegistryExA(
         lpMachineName: LPCSTR,
         hKey: HKEY,
@@ -111,16 +95,8 @@ extern "system" {
         flags: ULONG,
         phkResult: PHKEY,
     ) -> LSTATUS;
-    pub fn RegCreateKeyA(
-        hKey: HKEY,
-        lpSubKey: LPCSTR,
-        phkResult: PHKEY,
-    ) -> LSTATUS;
-    pub fn RegCreateKeyW(
-        hKey: HKEY,
-        lpSubKey: LPCWSTR,
-        phkResult: PHKEY,
-    ) -> LSTATUS;
+    pub fn RegCreateKeyA(hKey: HKEY, lpSubKey: LPCSTR, phkResult: PHKEY) -> LSTATUS;
+    pub fn RegCreateKeyW(hKey: HKEY, lpSubKey: LPCWSTR, phkResult: PHKEY) -> LSTATUS;
     pub fn RegCreateKeyExA(
         hKey: HKEY,
         lpSubKey: LPCSTR,
@@ -169,14 +145,8 @@ extern "system" {
         hTransaction: HANDLE,
         pExtendedParemeter: PVOID,
     ) -> LSTATUS;
-    pub fn RegDeleteKeyA(
-        hKey: HKEY,
-        lpSubKey: LPCSTR,
-    ) -> LSTATUS;
-    pub fn RegDeleteKeyW(
-        hKey: HKEY,
-        lpSubKey: LPCWSTR,
-    ) -> LSTATUS;
+    pub fn RegDeleteKeyA(hKey: HKEY, lpSubKey: LPCSTR) -> LSTATUS;
+    pub fn RegDeleteKeyW(hKey: HKEY, lpSubKey: LPCWSTR) -> LSTATUS;
     pub fn RegDeleteKeyExA(
         hKey: HKEY,
         lpSubKey: LPCSTR,
@@ -205,36 +175,13 @@ extern "system" {
         hTransaction: HANDLE,
         pExtendedParemeter: PVOID,
     ) -> LSTATUS;
-    pub fn RegDisableReflectionKey(
-        hBase: HKEY,
-    ) -> LONG;
-    pub fn RegEnableReflectionKey(
-        hBase: HKEY,
-    ) -> LONG;
-    pub fn RegQueryReflectionKey(
-        hBase: HKEY,
-        bIsReflectionDisabled: *mut BOOL,
-    ) -> LONG;
-    pub fn RegDeleteValueA(
-        hKey: HKEY,
-        lpValueName: LPCSTR,
-    ) -> LSTATUS;
-    pub fn RegDeleteValueW(
-        hKey: HKEY,
-        lpValueName: LPCWSTR,
-    ) -> LSTATUS;
-    pub fn RegEnumKeyA(
-        hKey: HKEY,
-        dwIndex: DWORD,
-        lpName: LPSTR,
-        cchName: DWORD,
-    ) -> LSTATUS;
-    pub fn RegEnumKeyW(
-        hKey: HKEY,
-        dwIndex: DWORD,
-        lpName: LPWSTR,
-        cchName: DWORD,
-    ) -> LSTATUS;
+    pub fn RegDisableReflectionKey(hBase: HKEY) -> LONG;
+    pub fn RegEnableReflectionKey(hBase: HKEY) -> LONG;
+    pub fn RegQueryReflectionKey(hBase: HKEY, bIsReflectionDisabled: *mut BOOL) -> LONG;
+    pub fn RegDeleteValueA(hKey: HKEY, lpValueName: LPCSTR) -> LSTATUS;
+    pub fn RegDeleteValueW(hKey: HKEY, lpValueName: LPCWSTR) -> LSTATUS;
+    pub fn RegEnumKeyA(hKey: HKEY, dwIndex: DWORD, lpName: LPSTR, cchName: DWORD) -> LSTATUS;
+    pub fn RegEnumKeyW(hKey: HKEY, dwIndex: DWORD, lpName: LPWSTR, cchName: DWORD) -> LSTATUS;
     pub fn RegEnumKeyExA(
         hKey: HKEY,
         dwIndex: DWORD,
@@ -275,25 +222,15 @@ extern "system" {
         lpData: LPBYTE,
         lpcbData: LPDWORD,
     ) -> LSTATUS;
-    pub fn RegFlushKey(
-        hKey: HKEY,
-    ) -> LSTATUS;
+    pub fn RegFlushKey(hKey: HKEY) -> LSTATUS;
     pub fn RegGetKeySecurity(
         hKey: HKEY,
         SecurityInformation: SECURITY_INFORMATION,
         pSecurityDescriptor: PSECURITY_DESCRIPTOR,
         lpcbSecurityDescriptor: LPDWORD,
     ) -> LSTATUS;
-    pub fn RegLoadKeyA(
-        hKey: HKEY,
-        lpSubKey: LPCSTR,
-        lpFile: LPCSTR,
-    ) -> LSTATUS;
-    pub fn RegLoadKeyW(
-        hKey: HKEY,
-        lpSubKey: LPCWSTR,
-        lpFile: LPCWSTR,
-    ) -> LSTATUS;
+    pub fn RegLoadKeyA(hKey: HKEY, lpSubKey: LPCSTR, lpFile: LPCSTR) -> LSTATUS;
+    pub fn RegLoadKeyW(hKey: HKEY, lpSubKey: LPCWSTR, lpFile: LPCWSTR) -> LSTATUS;
     pub fn RegNotifyChangeKeyValue(
         hKey: HKEY,
         bWatchSubtree: BOOL,
@@ -301,16 +238,8 @@ extern "system" {
         hEvent: HANDLE,
         fAsynchronous: BOOL,
     ) -> LSTATUS;
-    pub fn RegOpenKeyA(
-        hKey: HKEY,
-        lpSubKey: LPCSTR,
-        phkResult: PHKEY,
-    ) -> LSTATUS;
-    pub fn RegOpenKeyW(
-        hKey: HKEY,
-        lpSubKey: LPCWSTR,
-        phkResult: PHKEY,
-    ) -> LSTATUS;
+    pub fn RegOpenKeyA(hKey: HKEY, lpSubKey: LPCSTR, phkResult: PHKEY) -> LSTATUS;
+    pub fn RegOpenKeyW(hKey: HKEY, lpSubKey: LPCWSTR, phkResult: PHKEY) -> LSTATUS;
     pub fn RegOpenKeyExA(
         hKey: HKEY,
         lpSubKey: LPCSTR,
@@ -371,12 +300,7 @@ extern "system" {
         lpcbSecurityDescriptor: LPDWORD,
         lpftLastWriteTime: PFILETIME,
     ) -> LSTATUS;
-    pub fn RegQueryValueA(
-        hKey: HKEY,
-        lpSubKey: LPCSTR,
-        lpData: LPSTR,
-        lpcbData: PLONG,
-    ) -> LSTATUS;
+    pub fn RegQueryValueA(hKey: HKEY, lpSubKey: LPCSTR, lpData: LPSTR, lpcbData: PLONG) -> LSTATUS;
     pub fn RegQueryValueW(
         hKey: HKEY,
         lpSubKey: LPCWSTR,
@@ -425,21 +349,9 @@ extern "system" {
         lpNewFile: LPCWSTR,
         lpOldFile: LPCWSTR,
     ) -> LSTATUS;
-    pub fn RegRestoreKeyA(
-        hKey: HKEY,
-        lpFile: LPCSTR,
-        dwFlags: DWORD,
-    ) -> LSTATUS;
-    pub fn RegRestoreKeyW(
-        hKey: HKEY,
-        lpFile: LPCWSTR,
-        dwFlags: DWORD,
-    ) -> LSTATUS;
-    pub fn RegRenameKey(
-        hKey: HKEY,
-        lpSubKeyName: LPCWSTR,
-        lpNewKeyName: LPCWSTR,
-    ) -> LSTATUS;
+    pub fn RegRestoreKeyA(hKey: HKEY, lpFile: LPCSTR, dwFlags: DWORD) -> LSTATUS;
+    pub fn RegRestoreKeyW(hKey: HKEY, lpFile: LPCWSTR, dwFlags: DWORD) -> LSTATUS;
+    pub fn RegRenameKey(hKey: HKEY, lpSubKeyName: LPCWSTR, lpNewKeyName: LPCWSTR) -> LSTATUS;
     pub fn RegSaveKeyA(
         hKey: HKEY,
         lpFile: LPCSTR,
@@ -485,24 +397,10 @@ extern "system" {
         lpData: *const BYTE,
         cbData: DWORD,
     ) -> LSTATUS;
-    pub fn RegUnLoadKeyA(
-        hKey: HKEY,
-        lpSubKey: LPCSTR,
-    ) -> LSTATUS;
-    pub fn RegUnLoadKeyW(
-        hKey: HKEY,
-        lpSubKey: LPCWSTR,
-    ) -> LSTATUS;
-    pub fn RegDeleteKeyValueA(
-        hKey: HKEY,
-        lpSubKey: LPCSTR,
-        lpValueName: LPCSTR,
-    ) -> LSTATUS;
-    pub fn RegDeleteKeyValueW(
-        hKey: HKEY,
-        lpSubKey: LPCWSTR,
-        lpValueName: LPCWSTR,
-    ) -> LSTATUS;
+    pub fn RegUnLoadKeyA(hKey: HKEY, lpSubKey: LPCSTR) -> LSTATUS;
+    pub fn RegUnLoadKeyW(hKey: HKEY, lpSubKey: LPCWSTR) -> LSTATUS;
+    pub fn RegDeleteKeyValueA(hKey: HKEY, lpSubKey: LPCSTR, lpValueName: LPCSTR) -> LSTATUS;
+    pub fn RegDeleteKeyValueW(hKey: HKEY, lpSubKey: LPCWSTR, lpValueName: LPCWSTR) -> LSTATUS;
     pub fn RegSetKeyValueA(
         hKey: HKEY,
         lpSubKey: LPCSTR,
@@ -519,19 +417,9 @@ extern "system" {
         lpData: LPCVOID,
         cbData: DWORD,
     ) -> LSTATUS;
-    pub fn RegDeleteTreeA(
-        hKey: HKEY,
-        lpSubKey: LPCSTR,
-    ) -> LSTATUS;
-    pub fn RegDeleteTreeW(
-        hKey: HKEY,
-        lpSubKey: LPCWSTR,
-    ) -> LSTATUS;
-    pub fn RegCopyTreeA(
-        hKeySrc: HKEY,
-        lpSubKey: LPCSTR,
-        hKeyDest: HKEY,
-    ) -> LSTATUS;
+    pub fn RegDeleteTreeA(hKey: HKEY, lpSubKey: LPCSTR) -> LSTATUS;
+    pub fn RegDeleteTreeW(hKey: HKEY, lpSubKey: LPCWSTR) -> LSTATUS;
+    pub fn RegCopyTreeA(hKeySrc: HKEY, lpSubKey: LPCSTR, hKeyDest: HKEY) -> LSTATUS;
     pub fn RegGetValueA(
         hkey: HKEY,
         lpSubKey: LPCSTR,
@@ -550,11 +438,7 @@ extern "system" {
         pvData: PVOID,
         pcbData: LPDWORD,
     ) -> LSTATUS;
-    pub fn RegCopyTreeW(
-        hKeySrc: HKEY,
-        lpSubKey: LPCWSTR,
-        hKeyDest: HKEY,
-    ) -> LSTATUS;
+    pub fn RegCopyTreeW(hKeySrc: HKEY, lpSubKey: LPCWSTR, hKeyDest: HKEY) -> LSTATUS;
     pub fn RegLoadMUIStringA(
         hKey: HKEY,
         pszValue: LPCSTR,
@@ -601,12 +485,8 @@ extern "system" {
         bForceAppsClosed: BOOL,
         bRebootAfterShutdown: BOOL,
     ) -> BOOL;
-    pub fn AbortSystemShutdownA(
-        lpMachineName: LPSTR,
-    ) -> BOOL;
-    pub fn AbortSystemShutdownW(
-        lpMachineName: LPWSTR,
-    ) -> BOOL;
+    pub fn AbortSystemShutdownA(lpMachineName: LPSTR) -> BOOL;
+    pub fn AbortSystemShutdownW(lpMachineName: LPWSTR) -> BOOL;
 }
 pub const REASON_SWINSTALL: DWORD = SHTDN_REASON_MAJOR_SOFTWARE | SHTDN_REASON_MINOR_INSTALLATION;
 pub const REASON_HWINSTALL: DWORD = SHTDN_REASON_MAJOR_HARDWARE | SHTDN_REASON_MINOR_INSTALLATION;
@@ -665,10 +545,7 @@ extern "system" {
         dwShutdownFlags: DWORD,
         dwReason: DWORD,
     ) -> DWORD;
-    pub fn CheckForHiberboot(
-        pHiberboot: PBOOLEAN,
-        bClearFlag: BOOLEAN,
-    ) -> DWORD;
+    pub fn CheckForHiberboot(pHiberboot: PBOOLEAN, bClearFlag: BOOLEAN) -> DWORD;
     pub fn RegSaveKeyExA(
         hKey: HKEY,
         lpFile: LPCSTR,

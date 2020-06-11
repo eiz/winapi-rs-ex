@@ -5,12 +5,12 @@
 // except according to those terms.
 //! IPv6 Internet address, 'on-wire' format structure.
 use shared::minwindef::{UCHAR, USHORT};
-UNION!{union in6_addr_u {
+UNION! {union in6_addr_u {
     [u16; 8],
     Byte Byte_mut: [UCHAR; 16],
     Word Word_mut: [USHORT; 8],
 }}
-STRUCT!{struct in6_addr {
+STRUCT! {struct in6_addr {
     u: in6_addr_u,
 }}
 pub type IN6_ADDR = in6_addr;

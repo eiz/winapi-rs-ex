@@ -38,7 +38,7 @@ pub const WTD_MOTW: DWORD = 0x00004000;
 pub const WTD_CODE_INTEGRITY_DRIVER_MODE: DWORD = 0x00008000;
 pub const WTD_UICONTEXT_EXECUTE: DWORD = 0;
 pub const WTD_UICONTEXT_INSTALL: DWORD = 1;
-STRUCT!{struct WINTRUST_DATA {
+STRUCT! {struct WINTRUST_DATA {
     cbStruct: DWORD,
     pPolicyCallbackData: LPVOID,
     pSIPClientData: LPVOID,
@@ -53,7 +53,7 @@ STRUCT!{struct WINTRUST_DATA {
     dwUIContext: DWORD,
     pSignatureSettings: *mut WINTRUST_SIGNATURE_SETTINGS,
 }}
-UNION!{union WINTRUST_DATA_u {
+UNION! {union WINTRUST_DATA_u {
     [usize; 1],
     pFile pFile_mut: *mut WINTRUST_FILE_INFO,
     // pCatalog pCatalog_mut: *mut WINTRUST_CATALOG_INFO,
@@ -62,7 +62,7 @@ UNION!{union WINTRUST_DATA_u {
     // pCert pCert_mut: *mut WINTRUST_CERT_INFO,
 }}
 pub type PWINTRUST_DATA = *mut WINTRUST_DATA;
-STRUCT!{struct WINTRUST_SIGNATURE_SETTINGS {
+STRUCT! {struct WINTRUST_SIGNATURE_SETTINGS {
     cbStruct: DWORD,
     dwIndex: DWORD,
     dwFlags: DWORD,
@@ -86,12 +86,12 @@ extern "system" {
 pub const SPC_UUID_LENGTH: usize = 16;
 pub type SPC_UUID = [BYTE; SPC_UUID_LENGTH];
 //SpcSerializedObjectAttributesClassId
-STRUCT!{struct SPC_SERIALIZED_OBJECT {
+STRUCT! {struct SPC_SERIALIZED_OBJECT {
     ClassId: SPC_UUID,
     SerializedData: CRYPT_DATA_BLOB,
 }}
 pub type PSPC_SERIALIZED_OBJECT = *mut SPC_SERIALIZED_OBJECT;
-STRUCT!{struct SPC_SIGINFO {
+STRUCT! {struct SPC_SIGINFO {
     dwSipVersion: DWORD,
     gSIPGuid: GUID,
     dwReserved1: DWORD,
@@ -104,11 +104,11 @@ pub type PSPC_SIGINFO = *mut SPC_SIGINFO;
 pub const SPC_URL_LINK_CHOICE: DWORD = 1;
 pub const SPC_MONIKER_LINK_CHOICE: DWORD = 2;
 pub const SPC_FILE_LINK_CHOICE: DWORD = 3;
-STRUCT!{struct SPC_LINK {
+STRUCT! {struct SPC_LINK {
     dwLinkChoice: DWORD,
     u: SPC_LINK_u,
 }}
-UNION!{union SPC_LINK_u {
+UNION! {union SPC_LINK_u {
     [u32; 6] [u64; 4],
     pwszUrl pwszUrl_mut: LPWSTR,
     Moniker Moniker_mut: SPC_SERIALIZED_OBJECT,
@@ -116,7 +116,7 @@ UNION!{union SPC_LINK_u {
 }}
 pub type PSPC_LINK = *mut SPC_LINK;
 //1337
-STRUCT!{struct SPC_SP_OPUS_INFO {
+STRUCT! {struct SPC_SP_OPUS_INFO {
     pwszProgramName: LPCWSTR,
     pMoreInfo: *mut SPC_LINK,
     pPublisherInfo: *mut SPC_LINK,

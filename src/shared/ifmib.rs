@@ -11,14 +11,14 @@ use shared::ipifcons::{IFTYPE, INTERNAL_IF_OPER_STATUS};
 use shared::minwindef::DWORD;
 use shared::ntdef::{UCHAR, WCHAR};
 const ANY_SIZE: usize = 1;
-STRUCT!{struct MIB_IFNUMBER {
+STRUCT! {struct MIB_IFNUMBER {
     dwValue: DWORD,
 }}
 pub type PMIB_IFNUMBER = *mut MIB_IFNUMBER;
 pub const MAXLEN_PHYSADDR: usize = 8;
 pub const MAXLEN_IFDESCR: usize = 256;
 pub const MAX_INTERFACE_NAME_LEN: usize = 256;
-STRUCT!{struct MIB_IFROW {
+STRUCT! {struct MIB_IFROW {
     wszName: [WCHAR; MAX_INTERFACE_NAME_LEN],
     dwIndex: IF_INDEX,
     dwType: IFTYPE,
@@ -45,7 +45,7 @@ STRUCT!{struct MIB_IFROW {
     bDescr: [UCHAR; MAXLEN_IFDESCR],
 }}
 pub type PMIB_IFROW = *mut MIB_IFROW;
-STRUCT!{struct MIB_IFTABLE {
+STRUCT! {struct MIB_IFTABLE {
     dwNumEntries: DWORD,
     table: [MIB_IFROW; ANY_SIZE],
 }}

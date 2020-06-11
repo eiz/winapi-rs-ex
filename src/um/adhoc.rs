@@ -7,30 +7,30 @@ use shared::guiddef::GUID;
 use shared::minwindef::ULONG;
 use um::unknwnbase::{IUnknown, IUnknownVtbl};
 use um::winnt::{BOOLEAN, HRESULT, LONG, LPCWSTR, LPWSTR};
-ENUM!{enum DOT11_ADHOC_CIPHER_ALGORITHM {
+ENUM! {enum DOT11_ADHOC_CIPHER_ALGORITHM {
     DOT11_ADHOC_CIPHER_ALGO_INVALID = -1i32 as u32,
     DOT11_ADHOC_CIPHER_ALGO_NONE = 0,
     DOT11_ADHOC_CIPHER_ALGO_CCMP = 0x4,
     DOT11_ADHOC_CIPHER_ALGO_WEP = 0x101,
 }}
-ENUM!{enum DOT11_ADHOC_AUTH_ALGORITHM {
+ENUM! {enum DOT11_ADHOC_AUTH_ALGORITHM {
     DOT11_ADHOC_AUTH_ALGO_INVALID = -1i32 as u32,
     DOT11_ADHOC_AUTH_ALGO_80211_OPEN = 1,
     DOT11_ADHOC_AUTH_ALGO_RSNA_PSK = 7,
 }}
-ENUM!{enum DOT11_ADHOC_NETWORK_CONNECTION_STATUS {
+ENUM! {enum DOT11_ADHOC_NETWORK_CONNECTION_STATUS {
     DOT11_ADHOC_NETWORK_CONNECTION_STATUS_INVALID = 0,
     DOT11_ADHOC_NETWORK_CONNECTION_STATUS_DISCONNECTED = 11,
     DOT11_ADHOC_NETWORK_CONNECTION_STATUS_CONNECTING = 12,
     DOT11_ADHOC_NETWORK_CONNECTION_STATUS_CONNECTED = 13,
     DOT11_ADHOC_NETWORK_CONNECTION_STATUS_FORMED = 14,
 }}
-ENUM!{enum DOT11_ADHOC_CONNECT_FAIL_REASON {
+ENUM! {enum DOT11_ADHOC_CONNECT_FAIL_REASON {
     DOT11_ADHOC_CONNECT_FAIL_DOMAIN_MISMATCH = 0,
     DOT11_ADHOC_CONNECT_FAIL_PASSPHRASE_MISMATCH = 1,
     DOT11_ADHOC_CONNECT_FAIL_OTHER = 2,
 }}
-RIDL!{#[uuid(0x8f10cc26, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
+RIDL! {#[uuid(0x8f10cc26, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
 interface IDot11AdHocManager(IDot11AdHocManagerVtbl): IUnknown(IUnknownVtbl) {
     fn CreateNetwork(
         Name: LPCWSTR,
@@ -58,7 +58,7 @@ interface IDot11AdHocManager(IDot11AdHocManagerVtbl): IUnknown(IUnknownVtbl) {
         pNetwork: *mut *mut IDot11AdHocNetwork,
     ) -> HRESULT,
 }}
-RIDL!{#[uuid(0x8f10cc27, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
+RIDL! {#[uuid(0x8f10cc27, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
 interface IDot11AdHocManagerNotificationSink(IDot11AdHocManagerNotificationSinkVtbl):
     IUnknown(IUnknownVtbl) {
     fn OnNetworkAdd(
@@ -74,7 +74,7 @@ interface IDot11AdHocManagerNotificationSink(IDot11AdHocManagerNotificationSinkV
         Signature: *mut GUID,
     ) -> HRESULT,
 }}
-RIDL!{#[uuid(0x8f10cc28, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
+RIDL! {#[uuid(0x8f10cc28, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
 interface IEnumDot11AdHocNetworks(IEnumDot11AdHocNetworksVtbl): IUnknown(IUnknownVtbl) {
     fn Next(
         cElt: ULONG,
@@ -89,7 +89,7 @@ interface IEnumDot11AdHocNetworks(IEnumDot11AdHocNetworksVtbl): IUnknown(IUnknow
         ppEnum: *mut *mut IEnumDot11AdHocNetworks,
     ) -> HRESULT,
 }}
-RIDL!{#[uuid(0x8f10cc29, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
+RIDL! {#[uuid(0x8f10cc29, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
 interface IDot11AdHocNetwork(IDot11AdHocNetworkVtbl): IUnknown(IUnknownVtbl) {
     fn GetStatus(
         eStatus: *mut DOT11_ADHOC_NETWORK_CONNECTION_STATUS,
@@ -128,7 +128,7 @@ interface IDot11AdHocNetwork(IDot11AdHocNetworkVtbl): IUnknown(IUnknownVtbl) {
     ) -> HRESULT,
     fn Disconnect() -> HRESULT,
 }}
-RIDL!{#[uuid(0x8f10cc2a, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
+RIDL! {#[uuid(0x8f10cc2a, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
 interface IDot11AdHocNetworkNotificationSink(IDot11AdHocNetworkNotificationSinkVtbl):
     IUnknown(IUnknownVtbl) {
     fn OnStatusChange(
@@ -138,7 +138,7 @@ interface IDot11AdHocNetworkNotificationSink(IDot11AdHocNetworkNotificationSinkV
         eFailReason: DOT11_ADHOC_CONNECT_FAIL_REASON,
     ) -> HRESULT,
 }}
-RIDL!{#[uuid(0x8f10cc2b, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
+RIDL! {#[uuid(0x8f10cc2b, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
 interface IDot11AdHocInterface(IDot11AdHocInterfaceVtbl): IUnknown(IUnknownVtbl) {
     fn GetDeviceSignature(
         pSignature: *mut GUID,
@@ -169,7 +169,7 @@ interface IDot11AdHocInterface(IDot11AdHocInterfaceVtbl): IUnknown(IUnknownVtbl)
         pState: *mut DOT11_ADHOC_NETWORK_CONNECTION_STATUS,
     ) -> HRESULT,
 }}
-RIDL!{#[uuid(0x8f10cc2c, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
+RIDL! {#[uuid(0x8f10cc2c, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
 interface IEnumDot11AdHocInterfaces(IEnumDot11AdHocInterfacesVtbl): IUnknown(IUnknownVtbl) {
     fn Next(
         cElt: ULONG,
@@ -184,7 +184,7 @@ interface IEnumDot11AdHocInterfaces(IEnumDot11AdHocInterfacesVtbl): IUnknown(IUn
         ppEnum: *mut *mut IEnumDot11AdHocInterfaces,
     ) -> HRESULT,
 }}
-RIDL!{#[uuid(0x8f10cc2d, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
+RIDL! {#[uuid(0x8f10cc2d, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
 interface IEnumDot11AdHocSecuritySettings(IEnumDot11AdHocSecuritySettingsVtbl):
     IUnknown(IUnknownVtbl) {
     fn Next(
@@ -200,7 +200,7 @@ interface IEnumDot11AdHocSecuritySettings(IEnumDot11AdHocSecuritySettingsVtbl):
         ppEnum: *mut *mut IEnumDot11AdHocSecuritySettings,
     ) -> HRESULT,
 }}
-RIDL!{#[uuid(0x8f10cc2e, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
+RIDL! {#[uuid(0x8f10cc2e, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
 interface IDot11AdHocSecuritySettings(IDot11AdHocSecuritySettingsVtbl): IUnknown(IUnknownVtbl) {
     fn GetDot11AuthAlgorithm(
         pAuth: *mut DOT11_ADHOC_AUTH_ALGORITHM,
@@ -209,12 +209,12 @@ interface IDot11AdHocSecuritySettings(IDot11AdHocSecuritySettingsVtbl): IUnknown
         pCipher: *mut DOT11_ADHOC_CIPHER_ALGORITHM,
     ) -> HRESULT,
 }}
-RIDL!{#[uuid(0x8f10cc2f, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
+RIDL! {#[uuid(0x8f10cc2f, 0xcf0d, 0x42a0, 0xac, 0xbe, 0xe2, 0xde, 0x70, 0x07, 0x38, 0x4d)]
 interface IDot11AdHocInterfaceNotificationSink(IDot11AdHocInterfaceNotificationSinkVtbl):
     IUnknown(IUnknownVtbl) {
     fn OnConnectionStatusChange(
         eStatus: DOT11_ADHOC_NETWORK_CONNECTION_STATUS,
     ) -> HRESULT,
 }}
-RIDL!{#[uuid(0xdd06a84f, 0x83bd, 0x4d01, 0x8a, 0xb9, 0x23, 0x89, 0xfe, 0xa0, 0x86, 0x9e)]
+RIDL! {#[uuid(0xdd06a84f, 0x83bd, 0x4d01, 0x8a, 0xb9, 0x23, 0x89, 0xfe, 0xa0, 0x86, 0x9e)]
 class Dot11AdHocManager;}

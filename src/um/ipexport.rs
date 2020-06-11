@@ -15,7 +15,7 @@ pub type IPAddr = ULONG;
 pub type IPMask = ULONG;
 pub type IP_STATUS = ULONG;
 pub type IPv6Addr = in6_addr;
-STRUCT!{struct IP_OPTION_INFORMATION {
+STRUCT! {struct IP_OPTION_INFORMATION {
     Ttl: UCHAR,
     Tos: UCHAR,
     Flags: UCHAR,
@@ -24,7 +24,7 @@ STRUCT!{struct IP_OPTION_INFORMATION {
 }}
 pub type PIP_OPTION_INFORMATION = *mut IP_OPTION_INFORMATION;
 #[cfg(target_arch = "x86_64")]
-STRUCT!{struct IP_OPTION_INFORMATION32 {
+STRUCT! {struct IP_OPTION_INFORMATION32 {
     Ttl: UCHAR,
     Tos: UCHAR,
     Flags: UCHAR,
@@ -33,7 +33,7 @@ STRUCT!{struct IP_OPTION_INFORMATION32 {
 }}
 #[cfg(target_arch = "x86_64")]
 pub type PIP_OPTION_INFORMATION32 = *mut IP_OPTION_INFORMATION32;
-STRUCT!{struct ICMP_ECHO_REPLY {
+STRUCT! {struct ICMP_ECHO_REPLY {
     Address: IPAddr,
     Status: ULONG,
     RoundTripTime: ULONG,
@@ -44,7 +44,7 @@ STRUCT!{struct ICMP_ECHO_REPLY {
 }}
 pub type PICMP_ECHO_REPLY = *mut ICMP_ECHO_REPLY;
 #[cfg(target_arch = "x86_64")]
-STRUCT!{struct ICMP_ECHO_REPLY32 {
+STRUCT! {struct ICMP_ECHO_REPLY32 {
     Address: IPAddr,
     Status: ULONG,
     RoundTripTime: ULONG,
@@ -55,7 +55,7 @@ STRUCT!{struct ICMP_ECHO_REPLY32 {
 }}
 #[cfg(target_arch = "x86_64")]
 pub type PICMP_ECHO_REPLY32 = *mut ICMP_ECHO_REPLY32;
-STRUCT!{#[repr(packed)] struct IPV6_ADDRESS_EX {
+STRUCT! {#[repr(packed)] struct IPV6_ADDRESS_EX {
     sin6_port: USHORT,
     sin6_flowinfo: ULONG,
     sin6_addr: [USHORT; 8],
@@ -63,7 +63,7 @@ STRUCT!{#[repr(packed)] struct IPV6_ADDRESS_EX {
 }}
 pub type PIPV6_ADDRESS_EX = *mut IPV6_ADDRESS_EX;
 // #include <packoff.h>
-STRUCT!{struct ICMPV6_ECHO_REPLY_LH {
+STRUCT! {struct ICMPV6_ECHO_REPLY_LH {
     Address: IPV6_ADDRESS_EX,
     Status: ULONG,
     RoundTripTime: INT,
@@ -72,37 +72,37 @@ pub type PICMPV6_ECHO_REPLY_LH = *mut ICMPV6_ECHO_REPLY_LH;
 pub type ICMPV6_ECHO_REPLY = ICMPV6_ECHO_REPLY_LH;
 pub type PICMPV6_ECHO_REPLY = *mut ICMPV6_ECHO_REPLY;
 // #endif
-STRUCT!{struct ARP_SEND_REPLY {
+STRUCT! {struct ARP_SEND_REPLY {
     DestAddress: IPAddr,
     SrcAddress: IPAddr,
 }}
 pub type PARP_SEND_REPLY = *mut ARP_SEND_REPLY;
-STRUCT!{struct TCP_RESERVE_PORT_RANGE {
+STRUCT! {struct TCP_RESERVE_PORT_RANGE {
     UpperRange: USHORT,
     LowerRange: USHORT,
 }}
 pub type PTCP_RESERVE_PORT_RANGE = *mut TCP_RESERVE_PORT_RANGE;
-STRUCT!{struct IP_ADAPTER_INDEX_MAP {
+STRUCT! {struct IP_ADAPTER_INDEX_MAP {
     Index: ULONG,
     Name: [WCHAR; MAX_ADAPTER_NAME],
 }}
 pub type PIP_ADAPTER_INDEX_MAP = *mut IP_ADAPTER_INDEX_MAP;
-STRUCT!{struct IP_INTERFACE_INFO {
+STRUCT! {struct IP_INTERFACE_INFO {
     NumAdapters: ULONG,
     Adapter: [IP_ADAPTER_INDEX_MAP; 1],
 }}
 pub type PIP_INTERFACE_INFO = *mut IP_INTERFACE_INFO;
-STRUCT!{struct IP_UNIDIRECTIONAL_ADAPTER_ADDRESS {
+STRUCT! {struct IP_UNIDIRECTIONAL_ADAPTER_ADDRESS {
     NumAdapters: ULONG,
     Address: [IPAddr; 1],
 }}
 pub type PIP_UNIDIRECTIONAL_ADAPTER_ADDRESS = *mut IP_UNIDIRECTIONAL_ADAPTER_ADDRESS;
-STRUCT!{struct IP_ADAPTER_ORDER_MAP {
+STRUCT! {struct IP_ADAPTER_ORDER_MAP {
     NumAdapters: ULONG,
     AdapterOrder: [ULONG; 1],
 }}
 pub type PIP_ADAPTER_ORDER_MAP = *mut IP_ADAPTER_ORDER_MAP;
-STRUCT!{struct IP_MCAST_COUNTER_INFO {
+STRUCT! {struct IP_MCAST_COUNTER_INFO {
     InMcastOctets: ULONG64,
     OutMcastOctets: ULONG64,
     InMcastPkts: ULONG64,

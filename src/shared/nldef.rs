@@ -6,7 +6,7 @@
 use shared::basetsd::ULONG64;
 use shared::minwindef::ULONG;
 use shared::ntdef::BOOLEAN;
-ENUM!{enum NL_PREFIX_ORIGIN {
+ENUM! {enum NL_PREFIX_ORIGIN {
     IpPrefixOriginOther = 0,
     IpPrefixOriginManual,
     IpPrefixOriginWellKnown,
@@ -19,7 +19,7 @@ pub const NlpoManual: NL_PREFIX_ORIGIN = IpPrefixOriginManual;
 pub const NlpoWellKnown: NL_PREFIX_ORIGIN = IpPrefixOriginWellKnown;
 pub const NlpoDhcp: NL_PREFIX_ORIGIN = IpPrefixOriginDhcp;
 pub const NlpoRouterAdvertisement: NL_PREFIX_ORIGIN = IpPrefixOriginRouterAdvertisement;
-ENUM!{enum NL_SUFFIX_ORIGIN {
+ENUM! {enum NL_SUFFIX_ORIGIN {
     NlsoOther = 0,
     NlsoManual,
     NlsoWellKnown,
@@ -34,7 +34,7 @@ ENUM!{enum NL_SUFFIX_ORIGIN {
     IpSuffixOriginRandom,
     IpSuffixOriginUnchanged = 1 << 4,
 }}
-ENUM!{enum NL_DAD_STATE {
+ENUM! {enum NL_DAD_STATE {
     NldsInvalid,
     NldsTentative,
     NldsDuplicate,
@@ -47,7 +47,7 @@ ENUM!{enum NL_DAD_STATE {
     IpDadStatePreferred,
 }}
 pub const NL_MAX_METRIC_COMPONENT: ULONG = (1u32 << 31) - 1;
-ENUM!{enum NL_ROUTE_PROTOCOL {
+ENUM! {enum NL_ROUTE_PROTOCOL {
     RouteProtocolOther = 1,
     RouteProtocolLocal = 2,
     RouteProtocolNetMgmt = 3,
@@ -113,7 +113,7 @@ ENUM!{enum NL_ROUTE_PROTOCOL {
     PROTO_IP_NT_STATIC_NON_DOD = 10007,
 }}
 pub type PNL_ROUTE_PROTOCOL = *mut NL_ROUTE_PROTOCOL;
-ENUM!{enum NL_ADDRESS_TYPE {
+ENUM! {enum NL_ADDRESS_TYPE {
     NlatUnspecified = 0,
     NlatUnicast = 1,
     NlatAnycast = 2,
@@ -122,7 +122,7 @@ ENUM!{enum NL_ADDRESS_TYPE {
     NlatInvalid = 5,
 }}
 pub type PNL_ADDRESS_TYPE = *mut NL_ADDRESS_TYPE;
-ENUM!{enum NL_ROUTE_ORIGIN {
+ENUM! {enum NL_ROUTE_ORIGIN {
     NlroManual = 0,
     NlroWellKnown = 1,
     NlroDHCP = 2,
@@ -130,7 +130,7 @@ ENUM!{enum NL_ROUTE_ORIGIN {
     Nlro6to4 = 4,
 }}
 pub type PNL_ROUTE_ORIGIN = *mut NL_ROUTE_ORIGIN;
-ENUM!{enum NL_NEIGHBOR_STATE {
+ENUM! {enum NL_NEIGHBOR_STATE {
     NlnsUnreachable = 0,
     NlnsIncomplete = 1,
     NlnsProbe = 2,
@@ -141,16 +141,16 @@ ENUM!{enum NL_NEIGHBOR_STATE {
     NlnsMaximum = 7,
 }}
 pub type PNL_NEIGHBOR_STATE = *mut NL_NEIGHBOR_STATE;
-ENUM!{enum NL_LINK_LOCAL_ADDRESS_BEHAVIOR {
+ENUM! {enum NL_LINK_LOCAL_ADDRESS_BEHAVIOR {
     LinkLocalAlwaysOff = 0,
     LinkLocalDelayed = 1,
     LinkLocalAlwaysOn = 2,
     LinkLocalUnchanged = -1i32 as u32,
 }}
-STRUCT!{struct NL_INTERFACE_OFFLOAD_ROD {
+STRUCT! {struct NL_INTERFACE_OFFLOAD_ROD {
     bitfield: BOOLEAN,
 }}
-BITFIELD!{NL_INTERFACE_OFFLOAD_ROD bitfield: BOOLEAN [
+BITFIELD! {NL_INTERFACE_OFFLOAD_ROD bitfield: BOOLEAN [
     NlChecksumSupported set_NlChecksumSupported[0..1],
     NlOptionsSupported set_NlOptionsSupported[1..2],
     TlDatagramChecksumSupported set_TlDatagramChecksumSupported[2..3],
@@ -161,25 +161,25 @@ BITFIELD!{NL_INTERFACE_OFFLOAD_ROD bitfield: BOOLEAN [
     TlGiantSendOffloadSupported set_TlGiantSendOffloadSupported[7..8],
 ]}
 pub type PNL_INTERFACE_OFFLOAD_ROD = *mut NL_INTERFACE_OFFLOAD_ROD;
-ENUM!{enum NL_ROUTER_DISCOVERY_BEHAVIOR {
+ENUM! {enum NL_ROUTER_DISCOVERY_BEHAVIOR {
     RouterDiscoveryDisabled = 0,
     RouterDiscoveryEnabled = 1,
     RouterDiscoveryDhcp = 2,
     RouterDiscoveryUnchanged = -1i32 as u32,
 }}
-ENUM!{enum NL_BANDWIDTH_FLAG {
+ENUM! {enum NL_BANDWIDTH_FLAG {
     NlbwDisabled = 0,
     NlbwEnabled = 1,
     NlbwUnchanged = -1i32 as u32,
 }}
 pub type PNL_BANDWIDTH_FLAG = *mut NL_BANDWIDTH_FLAG;
-STRUCT!{struct NL_PATH_BANDWIDTH_ROD {
+STRUCT! {struct NL_PATH_BANDWIDTH_ROD {
     Bandwidth: ULONG64,
     Instability: ULONG64,
     BandwidthPeaked: BOOLEAN,
 }}
 pub type PNL_PATH_BANDWIDTH_ROD = *mut NL_PATH_BANDWIDTH_ROD;
-ENUM!{enum NL_NETWORK_CATEGORY {
+ENUM! {enum NL_NETWORK_CATEGORY {
     NetworkCategoryPublic = 0,
     NetworkCategoryPrivate = 1,
     NetworkCategoryDomainAuthenticated = 2,
@@ -187,7 +187,7 @@ ENUM!{enum NL_NETWORK_CATEGORY {
     NetworkCategoryUnknown = -1i32 as u32,
 }}
 pub type PNL_NETWORK_CATEGORY = *mut NL_NETWORK_CATEGORY;
-ENUM!{enum NL_INTERFACE_NETWORK_CATEGORY_STATE {
+ENUM! {enum NL_INTERFACE_NETWORK_CATEGORY_STATE {
     NlincCategoryUnknown = 0,
     NlincPublic = 1,
     NlincPrivate = 2,
@@ -196,7 +196,7 @@ ENUM!{enum NL_INTERFACE_NETWORK_CATEGORY_STATE {
 }}
 pub type PNL_INTERFACE_NETWORK_CATEGORY_STATE = *mut NL_INTERFACE_NETWORK_CATEGORY_STATE;
 pub const NET_IF_CURRENT_SESSION: ULONG = -1i32 as u32;
-STRUCT!{struct NL_BANDWIDTH_INFORMATION {
+STRUCT! {struct NL_BANDWIDTH_INFORMATION {
     Bandwidth: ULONG64,
     Instability: ULONG64,
     BandwidthPeaked: BOOLEAN,

@@ -7,6 +7,7 @@ use std::cell::Cell;
 use std::collections::HashMap;
 use std::env::var;
 // (header name, &[header dependencies], &[library dependencies])
+#[rustfmt::skip]
 const DATA: &'static [(&'static str, &'static [&'static str], &'static [&'static str])] = &[
     // km
     ("d3dkmthk", &["basetsd", "d3dukmdt", "minwindef", "ntdef", "windef"], &[]),
@@ -418,15 +419,19 @@ struct Header {
 struct Graph(HashMap<&'static str, Header>);
 impl Graph {
     fn generate() -> Graph {
-        Graph(DATA.iter().map(|&(name, dependencies, libraries)| {
-            let header = Header {
-                required: false,
-                included: Cell::new(false),
-                dependencies: dependencies,
-                libraries: libraries,
-            };
-            (name, header)
-        }).collect())
+        Graph(
+            DATA.iter()
+                .map(|&(name, dependencies, libraries)| {
+                    let header = Header {
+                        required: false,
+                        included: Cell::new(false),
+                        dependencies: dependencies,
+                        libraries: libraries,
+                    };
+                    (name, header)
+                })
+                .collect(),
+        )
     }
     fn identify_required(&mut self) {
         for (name, header) in &mut self.0 {
@@ -468,19 +473,23 @@ impl Graph {
         }
     }
     fn emit_libraries(&self) {
-        let mut libs = self.0.iter().filter(|&(_, header)| {
-            header.included.get()
-        }).flat_map(|(_, header)| {
-            header.libraries.iter()
-        }).collect::<Vec<_>>();
+        let mut libs = self
+            .0
+            .iter()
+            .filter(|&(_, header)| header.included.get())
+            .flat_map(|(_, header)| header.libraries.iter())
+            .collect::<Vec<_>>();
         libs.sort();
         libs.dedup();
         // FIXME Temporary hacks until build script is redesigned.
         libs.retain(|&&lib| match &*var("TARGET").unwrap() {
             "aarch64-pc-windows-msvc" | "aarch64-uwp-windows-msvc" | "thumbv7a-pc-windows-msvc" => {
-                if lib == "opengl32" { false }
-                else { true }
-            },
+                if lib == "opengl32" {
+                    false
+                } else {
+                    true
+                }
+            }
             _ => true,
         });
         let prefix = library_prefix();
@@ -491,9 +500,11 @@ impl Graph {
     }
 }
 fn library_prefix() -> &'static str {
-    if var("TARGET").map(|target|
-        target == "i686-pc-windows-gnu" || target == "x86_64-pc-windows-gnu"
-    ).unwrap_or(false) && var("WINAPI_NO_BUNDLED_LIBRARIES").is_err() {
+    if var("TARGET")
+        .map(|target| target == "i686-pc-windows-gnu" || target == "x86_64-pc-windows-gnu")
+        .unwrap_or(false)
+        && var("WINAPI_NO_BUNDLED_LIBRARIES").is_err()
+    {
         "winapi_"
     } else {
         ""

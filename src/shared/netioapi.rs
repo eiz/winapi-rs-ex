@@ -23,22 +23,22 @@ use shared::ntddndis::{NDIS_MEDIUM, NDIS_PHYSICAL_MEDIUM};
 use shared::ntdef::{
     BOOLEAN, CHAR, HANDLE, LARGE_INTEGER, PCHAR, PCSTR, PSTR, PVOID, PWCHAR, PWSTR, WCHAR,
 };
-use shared::ws2def::{ADDRESS_FAMILY, SCOPE_ID, ScopeLevelCount};
+use shared::ws2def::{ScopeLevelCount, ADDRESS_FAMILY, SCOPE_ID};
 use shared::ws2ipdef::{PSOCKADDR_IN6_PAIR, SOCKADDR_IN6, SOCKADDR_INET};
 const ANY_SIZE: usize = 1;
 pub type NETIO_STATUS = DWORD;
 pub type NETIOAPI_API = NETIO_STATUS;
-ENUM!{enum MIB_NOTIFICATION_TYPE {
+ENUM! {enum MIB_NOTIFICATION_TYPE {
     MibParameterNotification,
     MibAddInstance,
     MibDeleteInstance,
     MibInitialNotification,
 }}
 pub type PMIB_NOTIFICATION_TYPE = *mut MIB_NOTIFICATION_TYPE;
-STRUCT!{struct MIB_IF_ROW2_InterfaceAndOperStatusFlags {
+STRUCT! {struct MIB_IF_ROW2_InterfaceAndOperStatusFlags {
     bitfield: BYTE,
 }}
-BITFIELD!{MIB_IF_ROW2_InterfaceAndOperStatusFlags bitfield: BOOLEAN [
+BITFIELD! {MIB_IF_ROW2_InterfaceAndOperStatusFlags bitfield: BOOLEAN [
     HardwareInterface set_HardwareInterface[0..1],
     FilterInterface set_FilterInterface[1..2],
     ConnectorPresent set_ConnectorPresent[2..3],
@@ -48,7 +48,7 @@ BITFIELD!{MIB_IF_ROW2_InterfaceAndOperStatusFlags bitfield: BOOLEAN [
     LowPower set_LowPower[6..7],
     EndPointInterface set_EndPointInterface[7..8],
 ]}
-STRUCT!{struct MIB_IF_ROW2 {
+STRUCT! {struct MIB_IF_ROW2 {
     InterfaceLuid: NET_LUID,
     InterfaceIndex: NET_IFINDEX,
     InterfaceGuid: GUID,
@@ -92,43 +92,33 @@ STRUCT!{struct MIB_IF_ROW2 {
     OutQLen: ULONG64,
 }}
 pub type PMIB_IF_ROW2 = *mut MIB_IF_ROW2;
-STRUCT!{struct MIB_IF_TABLE2 {
+STRUCT! {struct MIB_IF_TABLE2 {
     NumEntries: ULONG,
     Table: [MIB_IF_ROW2; ANY_SIZE],
 }}
 pub type PMIB_IF_TABLE2 = *mut MIB_IF_TABLE2;
 extern "system" {
-    pub fn GetIfEntry2(
-        Row: PMIB_IF_ROW2,
-    ) -> NETIOAPI_API;
+    pub fn GetIfEntry2(Row: PMIB_IF_ROW2) -> NETIOAPI_API;
 }
-ENUM!{enum MIB_IF_ENTRY_LEVEL {
+ENUM! {enum MIB_IF_ENTRY_LEVEL {
     MibIfEntryNormal = 0,
     MibIfEntryNormalWithoutStatistics = 2,
 }}
 pub type PMIB_IF_ENTRY_LEVEL = *mut MIB_IF_ENTRY_LEVEL;
 extern "system" {
-    pub fn GetIfEntry2Ex(
-        Level: MIB_IF_ENTRY_LEVEL,
-        Row: PMIB_IF_ROW2,
-    ) -> NETIOAPI_API;
-    pub fn GetIfTable2(
-        Table: *mut PMIB_IF_TABLE2,
-    ) -> NETIOAPI_API;
+    pub fn GetIfEntry2Ex(Level: MIB_IF_ENTRY_LEVEL, Row: PMIB_IF_ROW2) -> NETIOAPI_API;
+    pub fn GetIfTable2(Table: *mut PMIB_IF_TABLE2) -> NETIOAPI_API;
 }
-ENUM!{enum MIB_IF_TABLE_LEVEL {
+ENUM! {enum MIB_IF_TABLE_LEVEL {
     MibIfTableNormal = 0,
     MibIfTableRaw = 1,
     MibIfTableNormalWithoutStatistics = 2,
 }}
 pub type PMIB_IF_TABLE_LEVEL = *mut MIB_IF_TABLE_LEVEL;
 extern "system" {
-    pub fn GetIfTable2Ex(
-        Level: MIB_IF_TABLE_LEVEL,
-        Table: *mut PMIB_IF_TABLE2,
-    ) -> NETIOAPI_API;
+    pub fn GetIfTable2Ex(Level: MIB_IF_TABLE_LEVEL, Table: *mut PMIB_IF_TABLE2) -> NETIOAPI_API;
 }
-STRUCT!{struct MIB_IPINTERFACE_ROW {
+STRUCT! {struct MIB_IPINTERFACE_ROW {
     Family: ADDRESS_FAMILY,
     InterfaceLuid: NET_LUID,
     InterfaceIndex: NET_IFINDEX,
@@ -166,76 +156,66 @@ STRUCT!{struct MIB_IPINTERFACE_ROW {
     DisableDefaultRoutes: BOOLEAN,
 }}
 pub type PMIB_IPINTERFACE_ROW = *mut MIB_IPINTERFACE_ROW;
-STRUCT!{struct MIB_IPINTERFACE_TABLE {
+STRUCT! {struct MIB_IPINTERFACE_TABLE {
     NumEntries: ULONG,
     Table: [MIB_IPINTERFACE_ROW; ANY_SIZE],
 }}
 pub type PMIB_IPINTERFACE_TABLE = *mut MIB_IPINTERFACE_TABLE;
-STRUCT!{struct MIB_IFSTACK_ROW {
+STRUCT! {struct MIB_IFSTACK_ROW {
     HigherLayerInterfaceIndex: NET_IFINDEX,
     LowerLayerInterfaceIndex: NET_IFINDEX,
 }}
 pub type PMIB_IFSTACK_ROW = *mut MIB_IFSTACK_ROW;
-STRUCT!{struct MIB_INVERTEDIFSTACK_ROW {
+STRUCT! {struct MIB_INVERTEDIFSTACK_ROW {
     LowerLayerInterfaceIndex: NET_IFINDEX,
     HigherLayerInterfaceIndex: NET_IFINDEX,
 }}
 pub type PMIB_INVERTEDIFSTACK_ROW = *mut MIB_INVERTEDIFSTACK_ROW;
-STRUCT!{struct MIB_IFSTACK_TABLE {
+STRUCT! {struct MIB_IFSTACK_TABLE {
     NumEntries: ULONG,
     Table: [MIB_IFSTACK_ROW; ANY_SIZE],
 }}
 pub type PMIB_IFSTACK_TABLE = *mut MIB_IFSTACK_TABLE;
-STRUCT!{struct MIB_INVERTEDIFSTACK_TABLE {
+STRUCT! {struct MIB_INVERTEDIFSTACK_TABLE {
     NumEntries: ULONG,
     Table: [MIB_INVERTEDIFSTACK_ROW; ANY_SIZE],
 }}
 pub type PMIB_INVERTEDIFSTACK_TABLE = *mut MIB_INVERTEDIFSTACK_TABLE;
-FN!{stdcall PIPINTERFACE_CHANGE_CALLBACK(
+FN! {stdcall PIPINTERFACE_CHANGE_CALLBACK(
     CallerContext: PVOID,
     Row: PMIB_IPINTERFACE_ROW,
     NotificationType: MIB_NOTIFICATION_TYPE,
 ) -> ()}
-STRUCT!{struct MIB_IP_NETWORK_CONNECTION_BANDWIDTH_ESTIMATES {
+STRUCT! {struct MIB_IP_NETWORK_CONNECTION_BANDWIDTH_ESTIMATES {
     InboundBandwidthInformation: NL_BANDWIDTH_INFORMATION,
     OutboundBandwidthInformation: NL_BANDWIDTH_INFORMATION,
 }}
-pub type PMIB_IP_NETWORK_CONNECTION_BANDWIDTH_ESTIMATES = *mut
-    MIB_IP_NETWORK_CONNECTION_BANDWIDTH_ESTIMATES;
+pub type PMIB_IP_NETWORK_CONNECTION_BANDWIDTH_ESTIMATES =
+    *mut MIB_IP_NETWORK_CONNECTION_BANDWIDTH_ESTIMATES;
 extern "system" {
-    pub fn GetIfStackTable(
-        Table: *mut PMIB_IFSTACK_TABLE,
-    ) -> NETIOAPI_API;
-    pub fn GetInvertedIfStackTable(
-        Table: *mut PMIB_INVERTEDIFSTACK_TABLE,
-    ) -> NETIOAPI_API;
-    pub fn GetIpInterfaceEntry(
-        Row: PMIB_IPINTERFACE_ROW,
-    ) -> NETIOAPI_API;
+    pub fn GetIfStackTable(Table: *mut PMIB_IFSTACK_TABLE) -> NETIOAPI_API;
+    pub fn GetInvertedIfStackTable(Table: *mut PMIB_INVERTEDIFSTACK_TABLE) -> NETIOAPI_API;
+    pub fn GetIpInterfaceEntry(Row: PMIB_IPINTERFACE_ROW) -> NETIOAPI_API;
     pub fn GetIpInterfaceTable(
         Family: ADDRESS_FAMILY,
         Table: *mut PMIB_IPINTERFACE_TABLE,
     ) -> NETIOAPI_API;
-    pub fn InitializeIpInterfaceEntry(
-        Row: PMIB_IPINTERFACE_ROW,
-    );
+    pub fn InitializeIpInterfaceEntry(Row: PMIB_IPINTERFACE_ROW);
     pub fn NotifyIpInterfaceChange(
         Family: ADDRESS_FAMILY,
         Callback: PIPINTERFACE_CHANGE_CALLBACK,
         CallerContext: PVOID,
         InitialNotification: BOOLEAN,
-        NotificationHandle: *mut HANDLE
+        NotificationHandle: *mut HANDLE,
     ) -> NETIOAPI_API;
-    pub fn SetIpInterfaceEntry(
-        Row: PMIB_IPINTERFACE_ROW,
-    ) -> NETIOAPI_API;
+    pub fn SetIpInterfaceEntry(Row: PMIB_IPINTERFACE_ROW) -> NETIOAPI_API;
     pub fn GetIpNetworkConnectionBandwidthEstimates(
         InterfaceIndex: NET_IFINDEX,
         AddressFamily: ADDRESS_FAMILY,
         BandwidthEstimates: PMIB_IP_NETWORK_CONNECTION_BANDWIDTH_ESTIMATES,
     ) -> NETIOAPI_API;
 }
-STRUCT!{struct MIB_UNICASTIPADDRESS_ROW {
+STRUCT! {struct MIB_UNICASTIPADDRESS_ROW {
     Address: SOCKADDR_INET,
     InterfaceLuid: NET_LUID,
     InterfaceIndex: NET_IFINDEX,
@@ -250,33 +230,25 @@ STRUCT!{struct MIB_UNICASTIPADDRESS_ROW {
     CreationTimeStamp: LARGE_INTEGER,
 }}
 pub type PMIB_UNICASTIPADDRESS_ROW = *mut MIB_UNICASTIPADDRESS_ROW;
-STRUCT!{struct MIB_UNICASTIPADDRESS_TABLE {
+STRUCT! {struct MIB_UNICASTIPADDRESS_TABLE {
     NumEntries: ULONG,
     Table: [MIB_UNICASTIPADDRESS_ROW; ANY_SIZE],
 }}
 pub type PMIB_UNICASTIPADDRESS_TABLE = *mut MIB_UNICASTIPADDRESS_TABLE;
-FN!{stdcall PUNICAST_IPADDRESS_CHANGE_CALLBACK(
+FN! {stdcall PUNICAST_IPADDRESS_CHANGE_CALLBACK(
     CallerContext: PVOID,
     Row: PMIB_UNICASTIPADDRESS_ROW,
     NotificationType: MIB_NOTIFICATION_TYPE,
 ) -> ()}
 extern "system" {
-    pub fn CreateUnicastIpAddressEntry(
-        Row: *const MIB_UNICASTIPADDRESS_ROW,
-    ) -> NETIOAPI_API;
-    pub fn DeleteUnicastIpAddressEntry(
-        Row: *const MIB_UNICASTIPADDRESS_ROW,
-    ) -> NETIOAPI_API;
-    pub fn GetUnicastIpAddressEntry(
-        Row: PMIB_UNICASTIPADDRESS_ROW
-    ) -> NETIOAPI_API;
+    pub fn CreateUnicastIpAddressEntry(Row: *const MIB_UNICASTIPADDRESS_ROW) -> NETIOAPI_API;
+    pub fn DeleteUnicastIpAddressEntry(Row: *const MIB_UNICASTIPADDRESS_ROW) -> NETIOAPI_API;
+    pub fn GetUnicastIpAddressEntry(Row: PMIB_UNICASTIPADDRESS_ROW) -> NETIOAPI_API;
     pub fn GetUnicastIpAddressTable(
         Family: ADDRESS_FAMILY,
         Table: *mut PMIB_UNICASTIPADDRESS_TABLE,
     ) -> NETIOAPI_API;
-    pub fn InitializeUnicastIpAddressEntry(
-        Row: PMIB_UNICASTIPADDRESS_ROW,
-    );
+    pub fn InitializeUnicastIpAddressEntry(Row: PMIB_UNICASTIPADDRESS_ROW);
     pub fn NotifyUnicastIpAddressChange(
         Family: ADDRESS_FAMILY,
         Callback: PUNICAST_IPADDRESS_CHANGE_CALLBACK,
@@ -285,7 +257,7 @@ extern "system" {
         NotificationHandle: *mut HANDLE,
     ) -> NETIOAPI_API;
 }
-FN!{stdcall PSTABLE_UNICAST_IPADDRESS_TABLE_CALLBACK(
+FN! {stdcall PSTABLE_UNICAST_IPADDRESS_TABLE_CALLBACK(
     CallerContext: PVOID,
     AddressTable: PMIB_UNICASTIPADDRESS_TABLE,
 ) -> ()}
@@ -297,64 +269,54 @@ extern "system" {
         CallerContext: PVOID,
         NotificationHandle: *mut HANDLE,
     ) -> NETIOAPI_API;
-    pub fn SetUnicastIpAddressEntry(
-        Row: *const MIB_UNICASTIPADDRESS_ROW,
-    ) -> NETIOAPI_API;
+    pub fn SetUnicastIpAddressEntry(Row: *const MIB_UNICASTIPADDRESS_ROW) -> NETIOAPI_API;
 }
-STRUCT!{struct MIB_ANYCASTIPADDRESS_ROW {
+STRUCT! {struct MIB_ANYCASTIPADDRESS_ROW {
     Address: SOCKADDR_INET,
     InterfaceLuid: NET_LUID,
     InterfaceIndex: NET_IFINDEX,
     ScopeId: SCOPE_ID,
 }}
 pub type PMIB_ANYCASTIPADDRESS_ROW = *mut MIB_ANYCASTIPADDRESS_ROW;
-STRUCT!{struct MIB_ANYCASTIPADDRESS_TABLE {
+STRUCT! {struct MIB_ANYCASTIPADDRESS_TABLE {
     NumEntries: ULONG,
     Table: [MIB_ANYCASTIPADDRESS_ROW; ANY_SIZE],
 }}
 pub type PMIB_ANYCASTIPADDRESS_TABLE = *mut MIB_ANYCASTIPADDRESS_TABLE;
 extern "system" {
-    pub fn CreateAnycastIpAddressEntry(
-        Row: *const MIB_ANYCASTIPADDRESS_ROW,
-    ) -> NETIOAPI_API;
-    pub fn DeleteAnycastIpAddressEntry(
-        Row: *const MIB_ANYCASTIPADDRESS_ROW,
-    ) -> NETIOAPI_API;
-    pub fn GetAnycastIpAddressEntry(
-        Row: PMIB_ANYCASTIPADDRESS_ROW,
-    ) -> NETIOAPI_API;
+    pub fn CreateAnycastIpAddressEntry(Row: *const MIB_ANYCASTIPADDRESS_ROW) -> NETIOAPI_API;
+    pub fn DeleteAnycastIpAddressEntry(Row: *const MIB_ANYCASTIPADDRESS_ROW) -> NETIOAPI_API;
+    pub fn GetAnycastIpAddressEntry(Row: PMIB_ANYCASTIPADDRESS_ROW) -> NETIOAPI_API;
     pub fn GetAnycastIpAddressTable(
         Family: ADDRESS_FAMILY,
         Table: *mut PMIB_ANYCASTIPADDRESS_TABLE,
     ) -> NETIOAPI_API;
 }
-STRUCT!{struct MIB_MULTICASTIPADDRESS_ROW {
+STRUCT! {struct MIB_MULTICASTIPADDRESS_ROW {
     Address: SOCKADDR_INET,
     InterfaceIndex: NET_IFINDEX,
     InterfaceLuid: NET_LUID,
     ScopeId: SCOPE_ID,
 }}
 pub type PMIB_MULTICASTIPADDRESS_ROW = *mut MIB_MULTICASTIPADDRESS_ROW;
-STRUCT!{struct MIB_MULTICASTIPADDRESS_TABLE {
+STRUCT! {struct MIB_MULTICASTIPADDRESS_TABLE {
     NumEntries: ULONG,
     Table: [MIB_MULTICASTIPADDRESS_ROW; ANY_SIZE],
 }}
 pub type PMIB_MULTICASTIPADDRESS_TABLE = *mut MIB_MULTICASTIPADDRESS_TABLE;
 extern "system" {
-    pub fn GetMulticastIpAddressEntry(
-        Row: PMIB_MULTICASTIPADDRESS_ROW,
-    ) -> NETIOAPI_API;
+    pub fn GetMulticastIpAddressEntry(Row: PMIB_MULTICASTIPADDRESS_ROW) -> NETIOAPI_API;
     pub fn GetMulticastIpAddressTable(
         Family: ADDRESS_FAMILY,
         Table: *mut PMIB_MULTICASTIPADDRESS_TABLE,
     ) -> NETIOAPI_API;
 }
-STRUCT!{struct IP_ADDRESS_PREFIX {
+STRUCT! {struct IP_ADDRESS_PREFIX {
     Prefix: SOCKADDR_INET,
     PrefixLength: UINT8,
 }}
 pub type PIP_ADDRESS_PREFIX = *mut IP_ADDRESS_PREFIX;
-STRUCT!{struct MIB_IPFORWARD_ROW2 {
+STRUCT! {struct MIB_IPFORWARD_ROW2 {
     InterfaceLuid: NET_LUID,
     InterfaceIndex: NET_IFINDEX,
     DestinationPrefix: IP_ADDRESS_PREFIX,
@@ -372,23 +334,19 @@ STRUCT!{struct MIB_IPFORWARD_ROW2 {
     Origin: NL_ROUTE_ORIGIN,
 }}
 pub type PMIB_IPFORWARD_ROW2 = *mut MIB_IPFORWARD_ROW2;
-STRUCT!{struct MIB_IPFORWARD_TABLE2 {
+STRUCT! {struct MIB_IPFORWARD_TABLE2 {
     NumEntries: ULONG,
     Table: [MIB_IPFORWARD_ROW2; ANY_SIZE],
 }}
 pub type PMIB_IPFORWARD_TABLE2 = *mut MIB_IPFORWARD_TABLE2;
-FN!{stdcall PIPFORWARD_CHANGE_CALLBACK(
+FN! {stdcall PIPFORWARD_CHANGE_CALLBACK(
     CallerContext: PVOID,
     Row: PMIB_IPFORWARD_ROW2,
     NotificationType: MIB_NOTIFICATION_TYPE,
 ) -> ()}
 extern "system" {
-    pub fn CreateIpForwardEntry2(
-        Row: *const MIB_IPFORWARD_ROW2,
-    ) -> NETIOAPI_API;
-    pub fn DeleteIpForwardEntry2(
-        Row: *const MIB_IPFORWARD_ROW2,
-    ) -> NETIOAPI_API;
+    pub fn CreateIpForwardEntry2(Row: *const MIB_IPFORWARD_ROW2) -> NETIOAPI_API;
+    pub fn DeleteIpForwardEntry2(Row: *const MIB_IPFORWARD_ROW2) -> NETIOAPI_API;
     pub fn GetBestRoute2(
         InterfaceLuid: *mut NET_LUID,
         InterfaceIndex: NET_IFINDEX,
@@ -398,16 +356,12 @@ extern "system" {
         BestRoute: PMIB_IPFORWARD_ROW2,
         BestSourceAddress: *mut SOCKADDR_INET,
     ) -> NETIOAPI_API;
-    pub fn GetIpForwardEntry2(
-        Row: PMIB_IPFORWARD_ROW2,
-    ) -> NETIOAPI_API;
+    pub fn GetIpForwardEntry2(Row: PMIB_IPFORWARD_ROW2) -> NETIOAPI_API;
     pub fn GetIpForwardTable2(
         Family: ADDRESS_FAMILY,
         Table: *mut PMIB_IPFORWARD_TABLE2,
     ) -> NETIOAPI_API;
-    pub fn InitializeIpForwardEntry(
-        Row: PMIB_IPFORWARD_ROW2,
-    );
+    pub fn InitializeIpForwardEntry(Row: PMIB_IPFORWARD_ROW2);
     pub fn NotifyRouteChange2(
         AddressFamily: ADDRESS_FAMILY,
         Callback: PIPFORWARD_CHANGE_CALLBACK,
@@ -415,16 +369,14 @@ extern "system" {
         InitialNotification: BOOLEAN,
         NotificationHandle: *mut HANDLE,
     ) -> NETIOAPI_API;
-    pub fn SetIpForwardEntry2(
-        Route: *const MIB_IPFORWARD_ROW2,
-    ) -> NETIOAPI_API;
+    pub fn SetIpForwardEntry2(Route: *const MIB_IPFORWARD_ROW2) -> NETIOAPI_API;
 }
-UNION!{union MIB_IPPATH_ROW_u {
+UNION! {union MIB_IPPATH_ROW_u {
     [u32; 1],
     LastReachable LastReachable_mut: ULONG, // Milliseconds.
     LastUnreachable LastUnreachable_mut: ULONG, // Milliseconds.
 }}
-STRUCT!{struct MIB_IPPATH_ROW {
+STRUCT! {struct MIB_IPPATH_ROW {
     Source: SOCKADDR_INET,
     Destination: SOCKADDR_INET,
     InterfaceLuid: NET_LUID,
@@ -439,37 +391,30 @@ STRUCT!{struct MIB_IPPATH_ROW {
     LinkReceiveSpeed: ULONG64,
 }}
 pub type PMIB_IPPATH_ROW = *mut MIB_IPPATH_ROW;
-STRUCT!{struct MIB_IPPATH_TABLE {
+STRUCT! {struct MIB_IPPATH_TABLE {
     NumEntries: ULONG,
     Table: [MIB_IPPATH_ROW; ANY_SIZE],
 }}
 pub type PMIB_IPPATH_TABLE = *mut MIB_IPPATH_TABLE;
 extern "system" {
-    pub fn FlushIpPathTable(
-        Family: ADDRESS_FAMILY,
-    ) -> NETIOAPI_API;
-    pub fn GetIpPathEntry(
-        Row: PMIB_IPPATH_ROW,
-    ) -> NETIOAPI_API;
-    pub fn GetIpPathTable(
-        Family: ADDRESS_FAMILY,
-        Table: *mut PMIB_IPPATH_TABLE,
-    ) -> NETIOAPI_API;
+    pub fn FlushIpPathTable(Family: ADDRESS_FAMILY) -> NETIOAPI_API;
+    pub fn GetIpPathEntry(Row: PMIB_IPPATH_ROW) -> NETIOAPI_API;
+    pub fn GetIpPathTable(Family: ADDRESS_FAMILY, Table: *mut PMIB_IPPATH_TABLE) -> NETIOAPI_API;
 }
-STRUCT!{struct MIB_IPNET_ROW2_s {
+STRUCT! {struct MIB_IPNET_ROW2_s {
     Flags: UCHAR,
 }}
-BITFIELD!{MIB_IPNET_ROW2_s Flags: UCHAR [
+BITFIELD! {MIB_IPNET_ROW2_s Flags: UCHAR [
     IsRouter set_IsRouter[0..1],
     IsUnreachable set_IsUnreachable[1..2],
     Reserved  set_Reserved[2..8],
 ]}
-UNION!{union MIB_IPNET_ROW2_ReachabilityTime {
+UNION! {union MIB_IPNET_ROW2_ReachabilityTime {
     [u32; 1],
     LastReachable LastReachable_mut: ULONG,
     LastUnreachable LastUnreachable_mut: ULONG,
 }}
-STRUCT!{struct MIB_IPNET_ROW2 {
+STRUCT! {struct MIB_IPNET_ROW2 {
     Address: SOCKADDR_INET,
     InterfaceIndex: NET_IFINDEX,
     InterfaceLuid: NET_LUID,
@@ -480,39 +425,25 @@ STRUCT!{struct MIB_IPNET_ROW2 {
     ReachabilityTime: MIB_IPNET_ROW2_ReachabilityTime,
 }}
 pub type PMIB_IPNET_ROW2 = *mut MIB_IPNET_ROW2;
-STRUCT!{struct MIB_IPNET_TABLE2 {
+STRUCT! {struct MIB_IPNET_TABLE2 {
     NumEntries: ULONG,
     Table: [MIB_IPNET_ROW2; ANY_SIZE],
 }}
 pub type PMIB_IPNET_TABLE2 = *mut MIB_IPNET_TABLE2;
 extern "system" {
-    pub fn CreateIpNetEntry2(
-        Row: *const MIB_IPNET_ROW2,
-    ) -> NETIOAPI_API;
-    pub fn DeleteIpNetEntry2(
-        Row: *const MIB_IPNET_ROW2,
-    ) -> NETIOAPI_API;
-    pub fn FlushIpNetTable2(
-        Family: ADDRESS_FAMILY,
-        InterfaceIndex: NET_IFINDEX,
-    ) -> NETIOAPI_API;
-    pub fn GetIpNetEntry2(
-        Row: PMIB_IPNET_ROW2,
-    ) -> NETIOAPI_API;
-    pub fn GetIpNetTable2(
-        Family: ADDRESS_FAMILY,
-        Table: *mut PMIB_IPNET_TABLE2,
-    ) -> NETIOAPI_API;
+    pub fn CreateIpNetEntry2(Row: *const MIB_IPNET_ROW2) -> NETIOAPI_API;
+    pub fn DeleteIpNetEntry2(Row: *const MIB_IPNET_ROW2) -> NETIOAPI_API;
+    pub fn FlushIpNetTable2(Family: ADDRESS_FAMILY, InterfaceIndex: NET_IFINDEX) -> NETIOAPI_API;
+    pub fn GetIpNetEntry2(Row: PMIB_IPNET_ROW2) -> NETIOAPI_API;
+    pub fn GetIpNetTable2(Family: ADDRESS_FAMILY, Table: *mut PMIB_IPNET_TABLE2) -> NETIOAPI_API;
     pub fn ResolveIpNetEntry2(
         Row: PMIB_IPNET_ROW2,
         SourceAddress: *const SOCKADDR_INET,
     ) -> NETIOAPI_API;
-    pub fn SetIpNetEntry2(
-        Row: PMIB_IPNET_ROW2,
-    ) -> NETIOAPI_API;
+    pub fn SetIpNetEntry2(Row: PMIB_IPNET_ROW2) -> NETIOAPI_API;
 }
 pub const MIB_INVALID_TEREDO_PORT_NUMBER: USHORT = 0;
-FN!{stdcall PTEREDO_PORT_CHANGE_CALLBACK(
+FN! {stdcall PTEREDO_PORT_CHANGE_CALLBACK(
     CallerContext: PVOID,
     Port: USHORT,
     NotificationType: MIB_NOTIFICATION_TYPE,
@@ -524,15 +455,9 @@ extern "system" {
         InitialNotification: BOOLEAN,
         NotificationHandle: *mut HANDLE,
     ) -> NETIOAPI_API;
-    pub fn GetTeredoPort(
-        Port: *mut USHORT,
-    ) -> NETIOAPI_API;
-    pub fn CancelMibChangeNotify2(
-        NotificationHandle: HANDLE,
-    ) -> NETIOAPI_API;
-    pub fn FreeMibTable(
-        Memory: PVOID,
-    );
+    pub fn GetTeredoPort(Port: *mut USHORT) -> NETIOAPI_API;
+    pub fn CancelMibChangeNotify2(NotificationHandle: HANDLE) -> NETIOAPI_API;
+    pub fn FreeMibTable(Memory: PVOID);
     pub fn CreateSortedAddressPairs(
         SourceAddressList: *const SOCKADDR_IN6,
         SourceAddressCount: ULONG,
@@ -593,17 +518,10 @@ extern "system" {
         InterfaceGuid: *const GUID,
         InterfaceLuid: PNET_LUID,
     ) -> NETIOAPI_API;
-    pub fn if_nametoindex(
-        InterfaceName: PCSTR,
-    ) -> NET_IFINDEX;
-    pub fn if_indextoname(
-        InterfaceIndex: NET_IFINDEX,
-        InterfaceName: PCHAR,
-    ) -> PCHAR;
+    pub fn if_nametoindex(InterfaceName: PCSTR) -> NET_IFINDEX;
+    pub fn if_indextoname(InterfaceIndex: NET_IFINDEX, InterfaceName: PCHAR) -> PCHAR;
     pub fn GetCurrentThreadCompartmentId() -> NET_IF_COMPARTMENT_ID;
-    pub fn SetCurrentThreadCompartmentId(
-        CompartmentId: NET_IF_COMPARTMENT_ID
-    ) -> NETIOAPI_API;
+    pub fn SetCurrentThreadCompartmentId(CompartmentId: NET_IF_COMPARTMENT_ID) -> NETIOAPI_API;
     pub fn GetCurrentThreadCompartmentScope(
         CompartmentScope: PNET_IF_COMPARTMENT_SCOPE,
         CompartmentId: PNET_IF_COMPARTMENT_ID,
@@ -611,16 +529,12 @@ extern "system" {
     pub fn SetCurrentThreadCompartmentScope(
         CompartmentScope: NET_IF_COMPARTMENT_SCOPE,
     ) -> NETIOAPI_API;
-    pub fn GetJobCompartmentId(
-        JobHandle: HANDLE,
-    ) -> NET_IF_COMPARTMENT_ID;
+    pub fn GetJobCompartmentId(JobHandle: HANDLE) -> NET_IF_COMPARTMENT_ID;
     pub fn SetJobCompartmentId(
         JobHandle: HANDLE,
         CompartmentId: NET_IF_COMPARTMENT_ID,
     ) -> NETIOAPI_API;
-    pub fn GetSessionCompartmentId(
-        SessionId: ULONG,
-    ) -> NET_IF_COMPARTMENT_ID;
+    pub fn GetSessionCompartmentId(SessionId: ULONG) -> NET_IF_COMPARTMENT_ID;
     pub fn SetSessionCompartmentId(
         SessionId: ULONG,
         CompartmentId: NET_IF_COMPARTMENT_ID,
@@ -638,14 +552,8 @@ extern "system" {
         CompartmentId: NET_IF_COMPARTMENT_ID,
         NetworkName: *const WCHAR,
     ) -> NETIOAPI_API;
-    pub fn ConvertLengthToIpv4Mask(
-        MaskLength: ULONG,
-        Mask: PULONG,
-    ) -> NETIOAPI_API;
-    pub fn ConvertIpv4MaskToLength(
-        Mask: ULONG,
-        MaskLength: PUINT8,
-    ) -> NETIOAPI_API;
+    pub fn ConvertLengthToIpv4Mask(MaskLength: ULONG, Mask: PULONG) -> NETIOAPI_API;
+    pub fn ConvertIpv4MaskToLength(Mask: ULONG, MaskLength: PUINT8) -> NETIOAPI_API;
 }
 pub const DNS_SETTINGS_VERSION1: ULONG = 0x0001;
 pub const DNS_INTERFACE_SETTINGS_VERSION1: ULONG = 0x0001;
@@ -659,14 +567,14 @@ pub const DNS_SETTING_HOSTNAME: ULONG64 = 0x0040;
 pub const DNS_SETTINGS_ENABLE_LLMNR: ULONG64 = 0x0080;
 pub const DNS_SETTINGS_QUERY_ADAPTER_NAME: ULONG64 = 0x0100;
 pub const DNS_SETTING_PROFILE_NAMESERVER: ULONG64 = 0x0200;
-STRUCT!{struct DNS_SETTINGS {
+STRUCT! {struct DNS_SETTINGS {
     Version: ULONG,
     Flags: ULONG64,
     Hostname: PWSTR,
     Domain: PWSTR,
     SearchList: PWSTR,
 }}
-STRUCT!{struct DNS_INTERFACE_SETTINGS {
+STRUCT! {struct DNS_INTERFACE_SETTINGS {
     Version: ULONG,
     Flags: ULONG64,
     Domain: PWSTR,
@@ -679,22 +587,14 @@ STRUCT!{struct DNS_INTERFACE_SETTINGS {
     ProfileNameServer: PWSTR,
 }}
 extern "system" {
-    pub fn GetDnsSettings(
-        Settings: *mut DNS_SETTINGS,
-    ) -> NETIOAPI_API;
-    pub fn FreeDnsSettings(
-        Settings: *mut DNS_SETTINGS,
-    );
-    pub fn SetDnsSettings(
-        Settings: *const DNS_SETTINGS,
-    ) -> NETIOAPI_API;
+    pub fn GetDnsSettings(Settings: *mut DNS_SETTINGS) -> NETIOAPI_API;
+    pub fn FreeDnsSettings(Settings: *mut DNS_SETTINGS);
+    pub fn SetDnsSettings(Settings: *const DNS_SETTINGS) -> NETIOAPI_API;
     pub fn GetInterfaceDnsSettings(
         Interface: GUID,
         Settings: *mut DNS_INTERFACE_SETTINGS,
     ) -> NETIOAPI_API;
-    pub fn FreeInterfaceDnsSettings(
-        Settings: *mut DNS_INTERFACE_SETTINGS,
-    );
+    pub fn FreeInterfaceDnsSettings(Settings: *mut DNS_INTERFACE_SETTINGS);
     pub fn SetInterfaceDnsSettings(
         Interface: GUID,
         Settings: *const DNS_INTERFACE_SETTINGS,

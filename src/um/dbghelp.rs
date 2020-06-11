@@ -9,6 +9,8 @@ use shared::guiddef::GUID;
 use shared::minwindef::{
     BOOL, DWORD, HMODULE, LPDWORD, MAX_PATH, PDWORD, PUCHAR, PULONG, UCHAR, ULONG, USHORT, WORD,
 };
+#[cfg(target_pointer_width = "64")]
+use um::winnt::PIMAGE_NT_HEADERS64;
 use um::winnt::{
     BOOLEAN, CHAR, HANDLE, LIST_ENTRY, PCSTR, PCWSTR, PIMAGE_NT_HEADERS, PIMAGE_SECTION_HEADER,
     PSTR, PVOID, PWSTR, WCHAR,
@@ -18,11 +20,9 @@ use um::winnt::{
     PFPO_DATA, PIMAGE_COFF_SYMBOLS_HEADER, PIMAGE_DEBUG_DIRECTORY, PIMAGE_FUNCTION_ENTRY,
     PIMAGE_NT_HEADERS32,
 };
-#[cfg(target_pointer_width = "64")]
-use um::winnt::PIMAGE_NT_HEADERS64;
 use vc::vcruntime::size_t;
 #[cfg(target_pointer_width = "64")]
-STRUCT!{struct LOADED_IMAGE {
+STRUCT! {struct LOADED_IMAGE {
     ModuleName: PSTR,
     hFile: HANDLE,
     MappedAddress: PUCHAR,
@@ -39,7 +39,7 @@ STRUCT!{struct LOADED_IMAGE {
     SizeOfImage: ULONG,
 }}
 #[cfg(target_pointer_width = "32")]
-STRUCT!{struct LOADED_IMAGE {
+STRUCT! {struct LOADED_IMAGE {
     ModuleName: PSTR,
     hFile: HANDLE,
     MappedAddress: PUCHAR,
@@ -59,41 +59,41 @@ pub const MAX_SYM_NAME: usize = 2000;
 pub const ERROR_IMAGE_NOT_STRIPPED: DWORD = 0x8800;
 pub const ERROR_NO_DBG_POINTER: DWORD = 0x8801;
 pub const ERROR_NO_PDB_POINTER: DWORD = 0x8802;
-FN!{stdcall PFIND_DEBUG_FILE_CALLBACK(
+FN! {stdcall PFIND_DEBUG_FILE_CALLBACK(
     FileHandle: HANDLE,
     FileName: PCSTR,
     CallerData: PVOID,
 ) -> BOOL}
-FN!{stdcall PFIND_DEBUG_FILE_CALLBACKW(
+FN! {stdcall PFIND_DEBUG_FILE_CALLBACKW(
     FileHandle: HANDLE,
     FileName: PCWSTR,
     CallerData: PVOID,
 ) -> BOOL}
-FN!{stdcall PFINDFILEINPATHCALLBACK(
+FN! {stdcall PFINDFILEINPATHCALLBACK(
     filename: PCSTR,
     context: PVOID,
 ) -> BOOL}
-FN!{stdcall PFINDFILEINPATHCALLBACKW(
+FN! {stdcall PFINDFILEINPATHCALLBACKW(
     filename: PCWSTR,
     context: PVOID,
 ) -> BOOL}
-FN!{stdcall PFIND_EXE_FILE_CALLBACK(
+FN! {stdcall PFIND_EXE_FILE_CALLBACK(
     FileHandle: HANDLE,
     FileName: PCSTR,
     CallerData: PVOID,
 ) -> BOOL}
-FN!{stdcall PFIND_EXE_FILE_CALLBACKW(
+FN! {stdcall PFIND_EXE_FILE_CALLBACKW(
     FileHandle: HANDLE,
     FileName: PCWSTR,
     CallerData: PVOID,
 ) -> BOOL}
-FN!{stdcall PSYM_ENUMERATESYMBOLS_CALLBACKW(
+FN! {stdcall PSYM_ENUMERATESYMBOLS_CALLBACKW(
     pSymInfo: PSYMBOL_INFOW,
     SymbolSize: ULONG,
     CallerData: PVOID,
 ) -> BOOL}
 #[cfg(target_pointer_width = "32")]
-STRUCT!{struct IMAGE_DEBUG_INFORMATION {
+STRUCT! {struct IMAGE_DEBUG_INFORMATION {
     List: LIST_ENTRY,
     ReservedSize: DWORD,
     ReservedMappedBase: PVOID,
@@ -128,11 +128,11 @@ STRUCT!{struct IMAGE_DEBUG_INFORMATION {
 }}
 #[cfg(target_pointer_width = "32")]
 pub type PIMAGE_DEBUG_INFORMATION = *mut IMAGE_DEBUG_INFORMATION;
-FN!{stdcall PENUMDIRTREE_CALLBACK(
+FN! {stdcall PENUMDIRTREE_CALLBACK(
     FilePath: PCSTR,
     CallerData: PVOID,
 ) -> BOOL}
-FN!{stdcall PENUMDIRTREE_CALLBACKW(
+FN! {stdcall PENUMDIRTREE_CALLBACKW(
     FilePath: PCWSTR,
     CallerData: PVOID,
 ) -> BOOL}
@@ -156,7 +156,7 @@ pub const UNDNAME_NO_SPECIAL_SYMS: DWORD = 0x4000;
 pub const DBHHEADER_DEBUGDIRS: DWORD = 0x1;
 pub const DBHHEADER_CVMISC: DWORD = 0x2;
 pub const DBHHEADER_PDBGUID: DWORD = 0x3;
-STRUCT!{struct MODLOAD_DATA {
+STRUCT! {struct MODLOAD_DATA {
     ssize: DWORD,
     ssig: DWORD,
     data: PVOID,
@@ -164,7 +164,7 @@ STRUCT!{struct MODLOAD_DATA {
     flags: DWORD,
 }}
 pub type PMODLOAD_DATA = *mut MODLOAD_DATA;
-STRUCT!{struct MODLOAD_CVMISC {
+STRUCT! {struct MODLOAD_CVMISC {
     oCV: DWORD,
     cCV: size_t,
     oMisc: DWORD,
@@ -173,18 +173,18 @@ STRUCT!{struct MODLOAD_CVMISC {
     cImage: DWORD,
 }}
 pub type PMODLOAD_CVMISC = *mut MODLOAD_CVMISC;
-STRUCT!{struct MODLOAD_PDBGUID_PDBAGE {
+STRUCT! {struct MODLOAD_PDBGUID_PDBAGE {
     PdbGuid: GUID,
     PdbAge: DWORD,
 }}
 pub type PMODLOAD_PDBGUID_PDBAGE = *mut MODLOAD_PDBGUID_PDBAGE;
-ENUM!{enum ADDRESS_MODE {
+ENUM! {enum ADDRESS_MODE {
     AddrMode1616,
     AddrMode1632,
     AddrModeReal,
     AddrModeFlat,
 }}
-STRUCT!{struct ADDRESS64 {
+STRUCT! {struct ADDRESS64 {
     Offset: DWORD64,
     Segment: WORD,
     Mode: ADDRESS_MODE,
@@ -195,14 +195,14 @@ pub type ADDRESS = ADDRESS64;
 #[cfg(target_pointer_width = "64")]
 pub type LPADDRESS = LPADDRESS64;
 #[cfg(target_pointer_width = "32")]
-STRUCT!{struct ADDRESS {
+STRUCT! {struct ADDRESS {
     Offset: DWORD,
     Segment: WORD,
     Mode: ADDRESS_MODE,
 }}
 #[cfg(target_pointer_width = "32")]
 pub type LPADDRESS = *mut ADDRESS;
-STRUCT!{struct KDHELP64 {
+STRUCT! {struct KDHELP64 {
     Thread: DWORD64,
     ThCallbackStack: DWORD,
     ThCallbackBStore: DWORD,
@@ -224,7 +224,7 @@ pub type KDHELP = KDHELP64;
 #[cfg(target_pointer_width = "64")]
 pub type PKDHELP = PKDHELP64;
 #[cfg(target_pointer_width = "32")]
-STRUCT!{struct KDHELP {
+STRUCT! {struct KDHELP {
     Thread: DWORD,
     ThCallbackStack: DWORD,
     NextCallback: DWORD,
@@ -240,7 +240,7 @@ STRUCT!{struct KDHELP {
 }}
 #[cfg(target_pointer_width = "32")]
 pub type PKDHELP = *mut KDHELP;
-STRUCT!{struct STACKFRAME64 {
+STRUCT! {struct STACKFRAME64 {
     AddrPC: ADDRESS64,
     AddrReturn: ADDRESS64,
     AddrFrame: ADDRESS64,
@@ -256,7 +256,7 @@ STRUCT!{struct STACKFRAME64 {
 pub type LPSTACKFRAME64 = *mut STACKFRAME64;
 pub const INLINE_FRAME_CONTEXT_INIT: DWORD = 0;
 pub const INLINE_FRAME_CONTEXT_IGNORE: DWORD = 0xFFFFFFFF;
-STRUCT!{struct STACKFRAME_EX {
+STRUCT! {struct STACKFRAME_EX {
     AddrPC: ADDRESS64,
     AddrReturn: ADDRESS64,
     AddrFrame: ADDRESS64,
@@ -277,7 +277,7 @@ pub type STACKFRAME = STACKFRAME64;
 #[cfg(target_pointer_width = "64")]
 pub type LPSTACKFRAME = LPSTACKFRAME64;
 #[cfg(target_pointer_width = "32")]
-STRUCT!{struct STACKFRAME {
+STRUCT! {struct STACKFRAME {
     AddrPC: ADDRESS,
     AddrReturn: ADDRESS,
     AddrFrame: ADDRESS,
@@ -292,22 +292,22 @@ STRUCT!{struct STACKFRAME {
 }}
 #[cfg(target_pointer_width = "32")]
 pub type LPSTACKFRAME = *mut STACKFRAME;
-FN!{stdcall PREAD_PROCESS_MEMORY_ROUTINE64(
+FN! {stdcall PREAD_PROCESS_MEMORY_ROUTINE64(
     hProcess: HANDLE,
     qwBaseAddress: DWORD64,
     lpBuffer: PVOID,
     nSize: DWORD,
     lpNumberOfBytesRead: LPDWORD,
 ) -> BOOL}
-FN!{stdcall PFUNCTION_TABLE_ACCESS_ROUTINE64(
+FN! {stdcall PFUNCTION_TABLE_ACCESS_ROUTINE64(
     ahProcess: HANDLE,
     AddrBase: DWORD64,
 ) -> PVOID}
-FN!{stdcall PGET_MODULE_BASE_ROUTINE64(
+FN! {stdcall PGET_MODULE_BASE_ROUTINE64(
     hProcess: HANDLE,
     Address: DWORD64,
 ) -> DWORD64}
-FN!{stdcall PTRANSLATE_ADDRESS_ROUTINE64(
+FN! {stdcall PTRANSLATE_ADDRESS_ROUTINE64(
     hProcess: HANDLE,
     hThread: HANDLE,
     lpaddr: LPADDRESS64,
@@ -323,7 +323,7 @@ pub type PGET_MODULE_BASE_ROUTINE = PGET_MODULE_BASE_ROUTINE64;
 #[cfg(target_pointer_width = "64")]
 pub type PTRANSLATE_ADDRESS_ROUTINE = PTRANSLATE_ADDRESS_ROUTINE64;
 #[cfg(target_pointer_width = "32")]
-FN!{stdcall PREAD_PROCESS_MEMORY_ROUTINE(
+FN! {stdcall PREAD_PROCESS_MEMORY_ROUTINE(
     hProcess: HANDLE,
     qwBaseAddress: DWORD,
     lpBuffer: PVOID,
@@ -331,30 +331,30 @@ FN!{stdcall PREAD_PROCESS_MEMORY_ROUTINE(
     lpNumberOfBytesRead: PDWORD,
 ) -> BOOL}
 #[cfg(target_pointer_width = "32")]
-FN!{stdcall PFUNCTION_TABLE_ACCESS_ROUTINE(
+FN! {stdcall PFUNCTION_TABLE_ACCESS_ROUTINE(
     ahProcess: HANDLE,
     AddrBase: DWORD,
 ) -> PVOID}
 #[cfg(target_pointer_width = "32")]
-FN!{stdcall PGET_MODULE_BASE_ROUTINE(
+FN! {stdcall PGET_MODULE_BASE_ROUTINE(
     hProcess: HANDLE,
     Address: DWORD,
 ) -> DWORD}
 #[cfg(target_pointer_width = "32")]
-FN!{stdcall PTRANSLATE_ADDRESS_ROUTINE(
+FN! {stdcall PTRANSLATE_ADDRESS_ROUTINE(
     hProcess: HANDLE,
     hThread: HANDLE,
     lpaddr: LPADDRESS,
 ) -> DWORD}
 pub const API_VERSION_NUMBER: USHORT = 12;
-STRUCT!{struct API_VERSION {
+STRUCT! {struct API_VERSION {
     MajorVersion: USHORT,
     MinorVersion: USHORT,
     Revision: USHORT,
     Reserved: USHORT,
 }}
 pub type LPAPI_VERSION = *mut API_VERSION;
-STRUCT!{struct SYMBOL_INFOW {
+STRUCT! {struct SYMBOL_INFOW {
     SizeOfStruct: ULONG,
     TypeIndex: ULONG,
     Reserved: [ULONG64; 2],
@@ -372,7 +372,7 @@ STRUCT!{struct SYMBOL_INFOW {
     Name: [WCHAR; 1],
 }}
 pub type PSYMBOL_INFOW = *mut SYMBOL_INFOW;
-ENUM!{enum SYM_TYPE {
+ENUM! {enum SYM_TYPE {
     SymNone = 0,
     SymCoff,
     SymCv,
@@ -384,7 +384,7 @@ ENUM!{enum SYM_TYPE {
     SymVirtual,
     NumSymTypes,
 }}
-STRUCT!{struct IMAGEHLP_SYMBOL64 {
+STRUCT! {struct IMAGEHLP_SYMBOL64 {
     SizeOfStruct: DWORD,
     Address: DWORD64,
     Size: DWORD,
@@ -393,7 +393,7 @@ STRUCT!{struct IMAGEHLP_SYMBOL64 {
     Name: [CHAR; 1],
 }}
 pub type PIMAGEHLP_SYMBOL64 = *mut IMAGEHLP_SYMBOL64;
-STRUCT!{struct IMAGEHLP_MODULEW64 {
+STRUCT! {struct IMAGEHLP_MODULEW64 {
     SizeOfStruct: DWORD,
     BaseOfImage: DWORD64,
     ImageSize: DWORD,
@@ -421,7 +421,7 @@ STRUCT!{struct IMAGEHLP_MODULEW64 {
     Reserved: DWORD,
 }}
 pub type PIMAGEHLP_MODULEW64 = *mut IMAGEHLP_MODULEW64;
-STRUCT!{struct IMAGEHLP_LINEW64 {
+STRUCT! {struct IMAGEHLP_LINEW64 {
     SizeOfStruct: DWORD,
     Key: PVOID,
     LineNumber: DWORD,
@@ -447,27 +447,16 @@ extern "system" {
         data: PVOID,
     ) -> BOOL;
     pub fn ImagehlpApiVersion() -> LPAPI_VERSION;
-    pub fn ImagehlpApiVersionEx(
-        AppVersion: LPAPI_VERSION,
-    ) -> LPAPI_VERSION;
-    pub fn MakeSureDirectoryPathExists(
-        DirPath: PCSTR,
-    ) -> BOOL;
-    pub fn SearchTreeForFile(
-        RootPath: PCSTR,
-        InputPathName: PCSTR,
-        OutputPathBuffer: PSTR,
-    ) -> BOOL;
+    pub fn ImagehlpApiVersionEx(AppVersion: LPAPI_VERSION) -> LPAPI_VERSION;
+    pub fn MakeSureDirectoryPathExists(DirPath: PCSTR) -> BOOL;
+    pub fn SearchTreeForFile(RootPath: PCSTR, InputPathName: PCSTR, OutputPathBuffer: PSTR)
+        -> BOOL;
     pub fn SearchTreeForFileW(
         RootPath: PCWSTR,
         InputPathName: PCWSTR,
         OutputPathBuffer: PWSTR,
     ) -> BOOL;
-    pub fn FindDebugInfoFile(
-        FileName: PCSTR,
-        SymbolPath: PCSTR,
-        DebugFilePath: PSTR,
-    ) -> HANDLE;
+    pub fn FindDebugInfoFile(FileName: PCSTR, SymbolPath: PCSTR, DebugFilePath: PSTR) -> HANDLE;
     pub fn FindDebugInfoFileEx(
         FileName: PCSTR,
         SymbolPath: PCSTR,
@@ -482,11 +471,7 @@ extern "system" {
         Callback: PFIND_DEBUG_FILE_CALLBACKW,
         CallerData: PVOID,
     ) -> HANDLE;
-    pub fn FindExecutableImage(
-        FileName: PCSTR,
-        SymbolPath: PCSTR,
-        ImageFilePath: PSTR,
-    ) -> HANDLE;
+    pub fn FindExecutableImage(FileName: PCSTR, SymbolPath: PCSTR, ImageFilePath: PSTR) -> HANDLE;
     pub fn FindExecutableImageEx(
         FileName: PCSTR,
         SymbolPath: PCSTR,
@@ -547,9 +532,7 @@ extern "system" {
         maxStringLength: DWORD,
         flags: DWORD,
     ) -> DWORD;
-    pub fn GetTimestampForLoadedLibrary(
-        Module: HMODULE,
-    ) -> DWORD;
+    pub fn GetTimestampForLoadedLibrary(Module: HMODULE) -> DWORD;
     pub fn ImageDirectoryEntryToData(
         Base: PVOID,
         MappedAsImage: BOOLEAN,
@@ -563,9 +546,7 @@ extern "system" {
         Size: PULONG,
         FoundHeader: *mut PIMAGE_SECTION_HEADER,
     ) -> PVOID;
-    pub fn ImageNtHeader(
-        Base: PVOID,
-    ) -> PIMAGE_NT_HEADERS;
+    pub fn ImageNtHeader(Base: PVOID) -> PIMAGE_NT_HEADERS;
     pub fn ImageRvaToSection(
         NtHeaders: PIMAGE_NT_HEADERS,
         Base: PVOID,
@@ -611,13 +592,9 @@ pub const SYMOPT_DISABLE_SYMSRV_TIMEOUT: DWORD = 0x20000000;
 pub const SYMOPT_DISABLE_SRVSTAR_ON_STARTUP: DWORD = 0x40000000;
 pub const SYMOPT_DEBUG: DWORD = 0x80000000;
 extern "system" {
-    pub fn SymSetOptions(
-        SymOptions: DWORD,
-    ) -> DWORD;
+    pub fn SymSetOptions(SymOptions: DWORD) -> DWORD;
     pub fn SymGetOptions() -> DWORD;
-    pub fn SymCleanup(
-        hProcess: HANDLE,
-    ) -> BOOL;
+    pub fn SymCleanup(hProcess: HANDLE) -> BOOL;
     pub fn SymEnumSymbolsW(
         hProcess: HANDLE,
         BaseOfDll: ULONG64,
@@ -683,15 +660,8 @@ extern "system" {
         Displacement: PDWORD64,
         Symbol: PSYMBOL_INFOW,
     ) -> BOOL;
-    pub fn SymFromNameW(
-        hProcess: HANDLE,
-        Name: PCWSTR,
-        Symbol: PSYMBOL_INFOW,
-    ) -> BOOL;
-    pub fn SymFunctionTableAccess64(
-        hProcess: HANDLE,
-        AddrBase: DWORD64,
-    ) -> PVOID;
+    pub fn SymFromNameW(hProcess: HANDLE, Name: PCWSTR, Symbol: PSYMBOL_INFOW) -> BOOL;
+    pub fn SymFunctionTableAccess64(hProcess: HANDLE, AddrBase: DWORD64) -> PVOID;
     pub fn SymGetLineFromAddrW64(
         hProcess: HANDLE,
         dwAddr: DWORD64,
@@ -703,21 +673,14 @@ extern "system" {
         qwAddr: DWORD64,
         ModuleInfo: PIMAGEHLP_MODULEW64,
     ) -> BOOL;
-    pub fn SymGetModuleBase64(
-        hProcess: HANDLE,
-        AddrBase: DWORD64,
-    ) -> DWORD64;
+    pub fn SymGetModuleBase64(hProcess: HANDLE, AddrBase: DWORD64) -> DWORD64;
     pub fn SymGetSymFromAddr64(
         hProcess: HANDLE,
         Address: DWORD64,
         Displacement: PDWORD64,
         Symbol: PIMAGEHLP_SYMBOL64,
     ) -> BOOL;
-    pub fn SymInitializeW(
-        hProcess: HANDLE,
-        UserSearchPath: PCWSTR,
-        fInvadeProcess: BOOL,
-    ) -> BOOL;
+    pub fn SymInitializeW(hProcess: HANDLE, UserSearchPath: PCWSTR, fInvadeProcess: BOOL) -> BOOL;
     pub fn SymLoadModuleExW(
         hProcess: HANDLE,
         hFile: HANDLE,
@@ -728,14 +691,8 @@ extern "system" {
         Data: PMODLOAD_DATA,
         Flags: DWORD,
     ) -> DWORD64;
-    pub fn SymUnloadModule(
-        hProcess: HANDLE,
-        BaseOfDll: DWORD,
-    ) -> BOOL;
-    pub fn SymUnloadModule64(
-        hProcess: HANDLE,
-        BaseOfDll: DWORD64,
-    ) -> BOOL;
+    pub fn SymUnloadModule(hProcess: HANDLE, BaseOfDll: DWORD) -> BOOL;
+    pub fn SymUnloadModule64(hProcess: HANDLE, BaseOfDll: DWORD64) -> BOOL;
     #[cfg(target_pointer_width = "32")]
     pub fn MapDebugInformation(
         FileHandle: HANDLE,
@@ -744,7 +701,5 @@ extern "system" {
         ImageBase: ULONG,
     ) -> PIMAGE_DEBUG_INFORMATION;
     #[cfg(target_pointer_width = "32")]
-    pub fn UnmapDebugInformation(
-        DebugInfo: PIMAGE_DEBUG_INFORMATION,
-    ) -> BOOL;
+    pub fn UnmapDebugInformation(DebugInfo: PIMAGE_DEBUG_INFORMATION) -> BOOL;
 }
