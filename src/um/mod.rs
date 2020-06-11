@@ -297,6 +297,8 @@ pub mod lowlevelmonitorconfigurationapi;
 pub mod lsalookup;
 #[cfg(feature = "memoryapi")]
 pub mod memoryapi;
+#[cfg(feature = "mfapi")]
+pub mod mfapi;
 #[cfg(feature = "minschannel")]
 pub mod minschannel;
 #[cfg(feature = "minwinbase")]

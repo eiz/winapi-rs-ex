@@ -248,6 +248,7 @@ const DATA: &'static [(&'static str, &'static [&'static str], &'static [&'static
     ("lowlevelmonitorconfigurationapi", &["minwindef", "physicalmonitorenumerationapi", "winnt"], &["dxva2"]),
     ("lsalookup", &["guiddef", "minwindef", "ntdef", "winnt"], &["advapi32"]),
     ("memoryapi", &["basetsd", "minwinbase", "minwindef", "winnt"], &["kernel32"]),
+    ("mfapi", &["minwindef", "winnt"], &["mfplat"]),
     ("minschannel", &["guiddef", "minwindef", "wincrypt", "winnt"], &[]),
     ("minwinbase", &["basetsd", "minwindef", "ntstatus", "winnt"], &[]),
     ("mmdeviceapi", &["guiddef", "minwindef", "propidl", "propsys", "unknwnbase", "winnt", "wtypes"], &["mmdevapi"]),
