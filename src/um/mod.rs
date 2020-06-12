@@ -299,6 +299,8 @@ pub mod lsalookup;
 pub mod memoryapi;
 #[cfg(feature = "mfapi")]
 pub mod mfapi;
+#[cfg(feature = "mfobjects")]
+pub mod mfobjects;
 #[cfg(feature = "minschannel")]
 pub mod minschannel;
 #[cfg(feature = "minwinbase")]

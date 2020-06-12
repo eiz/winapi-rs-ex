@@ -3,8 +3,19 @@
 // <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your option.
 // All files in the project carrying such notice may not be copied, modified, or distributed
 // except according to those terms.
-use shared::minwindef::{DWORD, ULONG};
-use um::winnt::HRESULT;
+use ctypes::{__int64, c_void};
+use shared::basetsd::{INT16, INT32, INT64, UINT32, UINT64, UINT8};
+use shared::dxgiformat::DXGI_FORMAT;
+use shared::guiddef::{CLSID, GUID, REFGUID, REFIID};
+use shared::minwindef::{BOOL, DWORD, FLOAT, LONG, LPDWORD, UINT, ULONG};
+use shared::windef::{POINT, RECT};
+use um::mfobjects::{
+    IMFAsyncCallback, IMFAsyncResult, IMFAsyncResultVtbl, IMFAttributes, IMFMediaBuffer, IMFSample,
+};
+use um::minwinbase::OVERLAPPED;
+use um::propidl::PROPVARIANT;
+use um::unknwnbase::{IClassFactory, IUnknown};
+use um::winnt::{HANDLE, HRESULT, LONGLONG, LPCWSTR, LPWSTR, PCWSTR};
 pub const MFSTARTUP_NOSOCKET: DWORD = 0x1;
 pub const MFSTARTUP_LITE: DWORD = MFSTARTUP_NOSOCKET;
 pub const MFSTARTUP_FULL: DWORD = 0;
@@ -13,6 +24,9 @@ extern "system" {
     pub fn MFShutdown() -> HRESULT;
     pub fn MFLockPlatform() -> HRESULT;
     pub fn MFUnlockPlatform() -> HRESULT;
+}
+pub type MFWORKITEM_KEY = __int64;
+extern "system" {
     pub fn MFPutWorkItem(
         dwQueue: DWORD,
         pCallback: *mut IMFAsyncCallback,
