@@ -249,7 +249,7 @@ const DATA: &'static [(&'static str, &'static [&'static str], &'static [&'static
     ("lsalookup", &["guiddef", "minwindef", "ntdef", "winnt"], &["advapi32"]),
     ("mediaobj", &["guiddef", "minwindef", "strmif", "unknwnbase", "winnt"], &[]),
     ("memoryapi", &["basetsd", "minwinbase", "minwindef", "winnt"], &["kernel32"]),
-    ("mfapi", &["basetsd", "dxgiformat", "guiddef", "mediaobj", "mfobjects", "minwinbase", "minwindef", "unknwnbase", "winnt"], &["mfplat"]),
+    ("mfapi", &["basetsd", "d3d9types", "dxgiformat", "guiddef", "mediaobj", "mfobjects", "minwinbase", "minwindef", "unknwnbase", "winnt"], &["mfplat"]),
     ("mfobjects", &["basetsd", "guiddef", "minwindef", "mmreg", "objidlbase", "propidl", "unknwnbase", "windef", "winnt", "wtypes"], &["mfplat"]),
     ("minschannel", &["guiddef", "minwindef", "wincrypt", "winnt"], &[]),
     ("minwinbase", &["basetsd", "minwindef", "ntstatus", "winnt"], &[]),
