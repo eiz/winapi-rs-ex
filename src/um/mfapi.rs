@@ -3,7 +3,7 @@
 // <LICENSE-MIT or http://opensource.org/licenses/MIT>, at your option.
 // All files in the project carrying such notice may not be copied, modified, or distributed
 // except according to those terms.
-use ctypes::{__int64, c_void};
+use ctypes::{__int64, c_char, c_float, c_int, c_void};
 use shared::basetsd::{INT16, INT32, INT64, UINT32, UINT64, UINT8};
 use shared::d3d9types::{
     D3DFMT_A16B16G16R16F, D3DFMT_A2B10G10R10, D3DFMT_A8R8G8B8, D3DFMT_D16, D3DFMT_L16, D3DFMT_L8,
@@ -11,9 +11,9 @@ use shared::d3d9types::{
 };
 use shared::dxgiformat::DXGI_FORMAT;
 use shared::guiddef::{CLSID, GUID, REFGUID, REFIID};
-use shared::minwindef::{BOOL, BYTE, DWORD, FLOAT, LPDWORD, LPVOID, UINT, ULONG};
+use shared::minwindef::{BOOL, BYTE, DWORD, FLOAT, LPDWORD, LPVOID, UINT, ULONG, WORD};
 use shared::mmreg::{
-    WAVE_FORMAT_ALAC, WAVE_FORMAT_AMR_NB, WAVE_FORMAT_AMR_WB, WAVE_FORMAT_AMR_WP,
+    WAVEFORMATEX, WAVE_FORMAT_ALAC, WAVE_FORMAT_AMR_NB, WAVE_FORMAT_AMR_WB, WAVE_FORMAT_AMR_WP,
     WAVE_FORMAT_DOLBY_AC3_SPDIF, WAVE_FORMAT_DRM, WAVE_FORMAT_DTS, WAVE_FORMAT_FLAC,
     WAVE_FORMAT_IEEE_FLOAT, WAVE_FORMAT_MPEG, WAVE_FORMAT_MPEGLAYER3, WAVE_FORMAT_MPEG_ADTS_AAC,
     WAVE_FORMAT_MPEG_HEAAC, WAVE_FORMAT_OPUS, WAVE_FORMAT_PCM, WAVE_FORMAT_WMASPDIF,
@@ -24,14 +24,18 @@ use shared::windef::{POINT, RECT};
 use um::mediaobj::IMediaBuffer;
 use um::mfobjects::{
     IMFActivate, IMFAsyncCallback, IMFAsyncResult, IMFAsyncResultVtbl, IMFAttributes,
-    IMFByteStream, IMFCollection, IMFDXGIDeviceManager, IMFMediaBuffer, IMFMediaEvent,
-    IMFMediaEventQueue, IMFMediaType, IMFPluginControl, IMFSample, MediaEventType,
-    MFT_REGISTER_TYPE_INFO, MF_FILE_ACCESSMODE, MF_FILE_FLAGS, MF_FILE_OPENMODE,
+    IMFAudioMediaType, IMFByteStream, IMFCollection, IMFDXGIDeviceManager, IMFMediaBuffer,
+    IMFMediaEvent, IMFMediaEventQueue, IMFMediaType, IMFPluginControl, IMFSample,
+    IMFVideoMediaType, MFStandardVideoFormat, MFVideoInterlaceMode, MediaEventType,
+    MFT_REGISTER_TYPE_INFO, MFVIDEOFORMAT, MF_FILE_ACCESSMODE, MF_FILE_FLAGS, MF_FILE_OPENMODE,
+    QWORD,
 };
 use um::minwinbase::OVERLAPPED;
 use um::propidl::PROPVARIANT;
 use um::unknwnbase::{IClassFactory, IUnknown};
+use um::wingdi::BITMAPINFOHEADER;
 use um::winnt::{HANDLE, HRESULT, LONG, LONGLONG, LPCWSTR, LPWSTR, PCWSTR};
+use vc::vcruntime::size_t;
 pub const MFSTARTUP_NOSOCKET: DWORD = 0x1;
 pub const MFSTARTUP_LITE: DWORD = MFSTARTUP_NOSOCKET;
 pub const MFSTARTUP_FULL: DWORD = 0;
@@ -1110,14 +1114,14 @@ DEFINE_GUID! {MF_MT_PAD_CONTROL_FLAGS,
 ENUM! {enum MFVideoPadFlags {
     MFVideoPadFlag_PAD_TO_None = 0,
     MFVideoPadFlag_PAD_TO_4x3 = 1,
-    MFVideoPadFlag_PAD_TO_16x9 = 2
+    MFVideoPadFlag_PAD_TO_16x9 = 2,
 }}
 DEFINE_GUID! {MF_MT_SOURCE_CONTENT_HINT,
 0x68aca3cc, 0x22d0, 0x44e6, 0x85, 0xf8, 0x28, 0x16, 0x71, 0x97, 0xfa, 0x38}
 ENUM! {enum MFVideoSrcContentHintFlags {
     MFVideoSrcContentHintFlag_None = 0,
     MFVideoSrcContentHintFlag_16x9 = 1,
-    MFVideoSrcContentHintFlag_235_1 = 2
+    MFVideoSrcContentHintFlag_235_1 = 2,
 }}
 DEFINE_GUID! {MF_MT_VIDEO_CHROMA_SITING,
 0x65df2370, 0xc773, 0x4c33, 0xaa, 0x64, 0x84, 0x3e, 0x06, 0x8e, 0xfb, 0x0c}
@@ -1378,3 +1382,241 @@ DEFINE_GUID! {AM_MEDIA_TYPE_REPRESENTATION,
 0xe2e42ad2, 0x132c, 0x491e, 0xa2, 0x68, 0x3c, 0x7c, 0x2d, 0xca, 0x18, 0x1f}
 DEFINE_GUID! {FORMAT_MFVideoFormat,
 0xaed4ab2d, 0x7326, 0x43cb, 0x94, 0x64, 0xc8, 0x79, 0xca, 0xb9, 0xc4, 0x3d}
+extern "system" {
+    pub fn MFValidateMediaTypeSize(FormatType: GUID, pBlock: *mut UINT8, cbSize: UINT32)
+        -> HRESULT;
+    pub fn MFCreateMediaType(ppMFType: *mut *mut IMFMediaType) -> HRESULT;
+    pub fn MFCreateMFVideoFormatFromMFMediaType(
+        pMFType: *mut IMFMediaType,
+        ppMFVF: *mut *mut MFVIDEOFORMAT,
+        pcbSize: *mut UINT32,
+    ) -> HRESULT;
+}
+ENUM! {enum MFWaveFormatExConvertFlags {
+    MFWaveFormatExConvertFlag_Normal = 0,
+    MFWaveFormatExConvertFlag_ForceExtensible = 1,
+}}
+extern "system" {
+    pub fn MFCreateWaveFormatExFromMFMediaType(
+        pMFType: *mut IMFMediaType,
+        ppWF: *mut *mut WAVEFORMATEX,
+        pcbSize: *mut UINT32,
+        Flags: UINT32,
+    ) -> HRESULT;
+    /* TODO(eiz): Requires dvdmedia, amvideo
+       pub fn MFInitMediaTypeFromVideoInfoHeader(
+           pMFType: *mut IMFMediaType,
+           pVIH: *const VIDEOINFOHEADER,
+           cbBufSize: UINT32,
+           pSubtype: *const GUID,
+       ) -> HRESULT;
+       pub fn MFInitMediaTypeFromVideoInfoHeader2(
+           pMFType: *mut IMFMediaType,
+           pVIH2: *const VIDEOINFOHEADER2,
+           cbBufSize: UINT32,
+           pSubtype: *const GUID,
+       ) -> HRESULT;
+       pub fn MFInitMediaTypeFromMPEG1VideoInfo(
+           pMFType: *mut IMFMediaType,
+           pMP1VI: *const MPEG1VIDEOINFO,
+           cbBufSize: UINT32,
+           pSubtype: *const GUID,
+       ) -> HRESULT;
+       pub fn MFInitMediaTypeFromMPEG2VideoInfo(
+           pMFType: *mut IMFMediaType,
+           pMP2VI: *const MPEG2VIDEOINFO,
+           cbBufSize: UINT32,
+           pSubtype: *const GUID,
+       ) -> HRESULT;
+    */
+    pub fn MFCalculateBitmapImageSize(
+        pBMIH: *const BITMAPINFOHEADER,
+        cbBufSize: UINT32,
+        pcbImageSize: *mut UINT32,
+        pbKnown: *mut BOOL,
+    ) -> HRESULT;
+    pub fn MFCalculateImageSize(
+        guidSubtype: REFGUID,
+        unWidth: UINT32,
+        unHeight: UINT32,
+        pcbImageSize: *mut UINT32,
+    ) -> HRESULT;
+    pub fn MFFrameRateToAverageTimePerFrame(
+        unNumerator: UINT32,
+        unDenominator: UINT32,
+        punAverageTimePerFrame: *mut UINT64,
+    ) -> HRESULT;
+    pub fn MFAverageTimePerFrameToFrameRate(
+        unAverageTimePerFrame: UINT64,
+        punNumerator: *mut UINT32,
+        punDenominator: *mut UINT32,
+    ) -> HRESULT;
+    pub fn MFInitMediaTypeFromMFVideoFormat(
+        pMFType: *mut IMFMediaType,
+        pMFVF: *const MFVIDEOFORMAT,
+        cbBufSize: UINT32,
+    ) -> HRESULT;
+    pub fn MFInitMediaTypeFromWaveFormatEx(
+        pMFType: *mut IMFMediaType,
+        pWaveFormat: *const WAVEFORMATEX,
+        cbBufSize: UINT32,
+    ) -> HRESULT;
+    /* TODO(eiz): requires old ActiveMovie headers (amvideo etc)
+    pub fn MFInitMediaTypeFromAMMediaType(
+        pMFType: *mut IMFMediaType,
+        pAMType: *const AM_MEDIA_TYPE,
+    ) -> HRESULT;
+    pub fn MFInitAMMediaTypeFromMFMediaType(
+        pMFType: *mut IMFMediaType,
+        guidFormatBlockType: GUID,
+        pAMType: *mut AM_MEDIA_TYPE,
+    ) -> HRESULT;
+    pub fn MFCreateAMMediaTypeFromMFMediaType(
+        pMFType: *mut IMFMediaType,
+        guidFormatBlockType: GUID,
+        ppAMType: *mut *mut AM_MEDIA_TYPE,
+    ) -> HRESULT;
+    */
+    pub fn MFCompareFullToPartialMediaType(
+        pMFTypeFull: *mut IMFMediaType,
+        pMFTypePartial: *mut IMFMediaType,
+    ) -> BOOL;
+    pub fn MFWrapMediaType(
+        pOrig: *mut IMFMediaType,
+        MajorType: REFGUID,
+        SubType: REFGUID,
+        ppWrap: *mut *mut IMFMediaType,
+    ) -> HRESULT;
+    pub fn MFUnwrapMediaType(pWrap: *mut IMFMediaType, ppOrig: *mut *mut IMFMediaType) -> HRESULT;
+}
+// TODO(eiz): Functions that require ksmedia/ks
+extern "system" {
+    pub fn MFCreateVideoMediaType(
+        pVideoFormat: *const MFVIDEOFORMAT,
+        ppIVideoMediaType: *mut *mut IMFVideoMediaType,
+    ) -> HRESULT;
+    pub fn MFCreateVideoMediaTypeFromSubtype(
+        pAMSubtype: *const GUID,
+        ppIVideoMediaType: *mut *mut IMFVideoMediaType,
+    ) -> HRESULT;
+    pub fn MFIsFormatYUV(Format: DWORD) -> BOOL;
+    pub fn MFCreateVideoMediaTypeFromBitMapInfoHeader(
+        pbmihBitMapInfoHeader: *const BITMAPINFOHEADER,
+        dwPixelAspectRatioX: DWORD,
+        dwPixelAspectRatioY: DWORD,
+        InterlaceMode: MFVideoInterlaceMode,
+        VideoFlags: QWORD,
+        qwFramesPerSecondNumerator: QWORD,
+        qwFramesPerSecondDenominator: QWORD,
+        dwMaxBitRate: DWORD,
+        ppIVideoMediaType: *mut *mut IMFVideoMediaType,
+    ) -> HRESULT;
+    pub fn MFGetStrideForBitmapInfoHeader(
+        format: DWORD,
+        dwWidth: DWORD,
+        pStride: *mut LONG,
+    ) -> HRESULT;
+    pub fn MFGetPlaneSize(
+        format: DWORD,
+        dwWidth: DWORD,
+        dwHeight: DWORD,
+        pdwPlaneSize: *mut DWORD,
+    ) -> HRESULT;
+    pub fn MFCreateVideoMediaTypeFromBitMapInfoHeaderEx(
+        pbmihBitMapInfoHeader: *const BITMAPINFOHEADER,
+        cbBitMapInfoHeader: UINT32,
+        dwPixelAspectRatioX: DWORD,
+        dwPixelAspectRatioY: DWORD,
+        InterlaceMode: MFVideoInterlaceMode,
+        VideoFlags: QWORD,
+        dwFramesPerSecondNumerator: DWORD,
+        dwFramesPerSecondDenominator: DWORD,
+        dwMaxBitRate: DWORD,
+        ppIVideoMediaType: *mut *mut IMFVideoMediaType,
+    ) -> HRESULT;
+    pub fn MFCreateMediaTypeFromRepresentation(
+        guidRepresentation: GUID,
+        pvRepresentation: LPVOID,
+        ppIMediaType: *mut *mut IMFMediaType,
+    ) -> HRESULT;
+    pub fn MFCreateAudioMediaType(
+        pAudioFormat: *const WAVEFORMATEX,
+        ppIAudioMediaType: *mut *mut IMFAudioMediaType,
+    ) -> HRESULT;
+    pub fn MFGetUncompressedVideoFormat(pVideoFormat: *const MFVIDEOFORMAT) -> HRESULT;
+    pub fn MFInitVideoFormat(
+        pVideoFormat: *mut MFVIDEOFORMAT,
+        _type: MFStandardVideoFormat,
+    ) -> HRESULT;
+    pub fn MFInitVideoFormat_RGB(
+        pVideoFormat: *mut MFVIDEOFORMAT,
+        dwWidth: DWORD,
+        dwHeight: DWORD,
+        D3Dfmt: DWORD,
+    ) -> HRESULT;
+    pub fn MFConvertColorInfoToDXVA(
+        pdwToDXVA: *mut DWORD,
+        pFromFormat: *const MFVIDEOFORMAT,
+    ) -> HRESULT;
+    pub fn MFConvertColorInfoFromDXVA(pToFormat: *mut MFVIDEOFORMAT, dwFromDXVA: DWORD) -> HRESULT;
+    pub fn MFCopyImage(
+        pDest: *mut BYTE,
+        lDestStride: LONG,
+        pSrc: *const BYTE,
+        lSrcStride: LONG,
+        dwWidthInBytes: DWORD,
+        dwLines: DWORD,
+    ) -> HRESULT;
+    pub fn MFConvertFromFP16Array(
+        pDest: *mut c_float,
+        pSrc: *const WORD,
+        dwCount: DWORD,
+    ) -> HRESULT;
+    pub fn MFConvertToFP16Array(pDest: *mut WORD, pSrc: *const c_float, dwCount: DWORD) -> HRESULT;
+    pub fn MFCreate2DMediaBuffer(
+        dwWidth: DWORD,
+        dwHeight: DWORD,
+        dwFourCC: DWORD,
+        fBottomUp: BOOL,
+        ppBuffer: *mut *mut IMFMediaBuffer,
+    ) -> HRESULT;
+    pub fn MFCreateMediaBufferFromMediaType(
+        pMediaType: *mut IMFMediaType,
+        llDuration: LONGLONG,
+        dwMinLength: DWORD,
+        dwMinAlignment: DWORD,
+        ppBuffer: *mut *mut IMFMediaBuffer,
+    ) -> HRESULT;
+}
+// TODO(eiz): some inline helper functions for setting/getting attributes.
+extern "system" {
+    pub fn MFCreateCollection(ppIMFCollection: *mut *mut IMFCollection) -> HRESULT;
+}
+ENUM! {enum EAllocationType {
+    eAllocationTypeDynamic,
+    eAllocationTypeRT,
+    eAllocationTypePageable,
+    eAllocationTypeIgnore,
+}}
+extern "system" {
+    pub fn MFHeapAlloc(
+        nSize: size_t,
+        dwFlags: ULONG,
+        pszFile: *mut c_char,
+        line: c_int,
+        eat: EAllocationType,
+    ) -> *mut c_void;
+    pub fn MFHeapFree(pv: *mut c_void);
+}
+DEFINE_GUID! {CLSID_MFSourceResolver,
+0x90eab60f, 0xe43a, 0x4188, 0xbc, 0xc4, 0xe4, 0x7f, 0xdf, 0x04, 0x86, 0x8c}
+extern "system" {
+    pub fn MFGetContentProtectionSystemCLSID(
+        guidProtectionSystemID: REFGUID,
+        pclsID: *mut CLSID,
+    ) -> HRESULT;
+}
+DEFINE_GUID! {MF_DEVICESTREAM_ATTRIBUTE_FACEAUTH_CAPABILITY,
+0xCB6FD12A, 0x2248, 0x4E41, 0xAD, 0x46, 0xE7, 0x8B, 0xB9, 0x0A, 0xB9, 0xFC}
+DEFINE_GUID! {MF_DEVICESTREAM_ATTRIBUTE_SECURE_CAPABILITY,
+0x940FD626, 0xEA6E, 0x4684, 0x98, 0x40, 0x36, 0xBD, 0x6E, 0xC9, 0xFB, 0xEF}
