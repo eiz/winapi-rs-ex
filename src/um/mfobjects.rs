@@ -840,19 +840,19 @@ interface IMFByteStreamProxyClassFactory(IMFByteStreamProxyClassFactoryVtbl)
         ppvObject: *mut LPVOID,
     ) -> HRESULT,
 }}
-ENUM! {enum __MIDL___MIDL_itf_mfobjects_0000_0017_0001 {
+ENUM! {enum MF_FILE_ACCESSMODE {
     MF_ACCESSMODE_READ = 1,
     MF_ACCESSMODE_WRITE = 2,
     MF_ACCESSMODE_READWRITE = 3,
 }}
-ENUM! {enum __MIDL___MIDL_itf_mfobjects_0000_0017_0002 {
+ENUM! {enum MF_FILE_OPENMODE {
     MF_OPENMODE_FAIL_IF_NOT_EXIST = 0,
     MF_OPENMODE_FAIL_IF_EXIST = 1,
     MF_OPENMODE_RESET_IF_EXIST = 2,
     MF_OPENMODE_APPEND_IF_EXIST = 3,
     MF_OPENMODE_DELETE_IF_EXIST = 4,
 }}
-ENUM! {enum __MIDL___MIDL_itf_mfobjects_0000_0017_0003 {
+ENUM! {enum MF_FILE_FLAGS {
     MF_FILEFLAGS_NONE = 0,
     MF_FILEFLAGS_NOBUFFERING = 0x1,
     MF_FILEFLAGS_ALLOW_WRITE_SHARING = 0x2,

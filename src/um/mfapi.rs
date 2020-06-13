@@ -7,15 +7,19 @@ use ctypes::{__int64, c_void};
 use shared::basetsd::{INT16, INT32, INT64, UINT32, UINT64, UINT8};
 use shared::dxgiformat::DXGI_FORMAT;
 use shared::guiddef::{CLSID, GUID, REFGUID, REFIID};
-use shared::minwindef::{BOOL, DWORD, FLOAT, LONG, LPDWORD, UINT, ULONG};
+use shared::minwindef::{BOOL, BYTE, DWORD, FLOAT, LPDWORD, LPVOID, UINT, ULONG};
 use shared::windef::{POINT, RECT};
+use um::mediaobj::IMediaBuffer;
 use um::mfobjects::{
-    IMFAsyncCallback, IMFAsyncResult, IMFAsyncResultVtbl, IMFAttributes, IMFMediaBuffer, IMFSample,
+    IMFActivate, IMFAsyncCallback, IMFAsyncResult, IMFAsyncResultVtbl, IMFAttributes,
+    IMFByteStream, IMFDXGIDeviceManager, IMFMediaBuffer, IMFMediaEvent, IMFMediaEventQueue,
+    IMFPluginControl, IMFSample, MediaEventType, MFT_REGISTER_TYPE_INFO, MF_FILE_ACCESSMODE,
+    MF_FILE_FLAGS, MF_FILE_OPENMODE,
 };
 use um::minwinbase::OVERLAPPED;
 use um::propidl::PROPVARIANT;
 use um::unknwnbase::{IClassFactory, IUnknown};
-use um::winnt::{HANDLE, HRESULT, LONGLONG, LPCWSTR, LPWSTR, PCWSTR};
+use um::winnt::{HANDLE, HRESULT, LONG, LONGLONG, LPCWSTR, LPWSTR, PCWSTR};
 pub const MFSTARTUP_NOSOCKET: DWORD = 0x1;
 pub const MFSTARTUP_LITE: DWORD = MFSTARTUP_NOSOCKET;
 pub const MFSTARTUP_FULL: DWORD = 0;
