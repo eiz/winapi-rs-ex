@@ -295,8 +295,14 @@ pub mod lmwksta;
 pub mod lowlevelmonitorconfigurationapi;
 #[cfg(feature = "lsalookup")]
 pub mod lsalookup;
+#[cfg(feature = "mediaobj")]
+pub mod mediaobj;
 #[cfg(feature = "memoryapi")]
 pub mod memoryapi;
+#[cfg(feature = "mfapi")]
+pub mod mfapi;
+#[cfg(feature = "mfobjects")]
+pub mod mfobjects;
 #[cfg(feature = "minschannel")]
 pub mod minschannel;
 #[cfg(feature = "minwinbase")]
