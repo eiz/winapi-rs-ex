@@ -1,6 +1,7 @@
 name: Rust
 on: [push, pull_request]
 env:
+  RUSTFLAGS: -D warnings
   CARGO_INCREMENTAL: 0 
 jobs:
   win:
