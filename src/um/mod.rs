@@ -303,6 +303,8 @@ pub mod memoryapi;
 pub mod mfapi;
 #[cfg(feature = "mfobjects")]
 pub mod mfobjects;
+#[cfg(feature = "mftransform")]
+pub mod mftransform;
 #[cfg(feature = "minschannel")]
 pub mod minschannel;
 #[cfg(feature = "minwinbase")]
