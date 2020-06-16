@@ -341,3 +341,475 @@ interface IMFMediaSink(IMFMediaSinkVtbl): IUnknown(IUnknownVtbl) {
     ) -> HRESULT,
     fn Shutdown() -> HRESULT,
 }}
+ENUM! {enum MFSTREAMSINK_MARKER_TYPE {
+    MFSTREAMSINK_MARKER_DEFAULT = 0,
+    MFSTREAMSINK_MARKER_ENDOFSEGMENT = MFSTREAMSINK_MARKER_DEFAULT + 1,
+    MFSTREAMSINK_MARKER_TICK = MFSTREAMSINK_MARKER_ENDOFSEGMENT + 1,
+    MFSTREAMSINK_MARKER_EVENT = MFSTREAMSINK_MARKER_TICK + 1,
+}}
+RIDL! {#[uuid(0x0a97b3cf, 0x8e7c, 0x4a3d, 0x8f, 0x8c, 0x0c, 0x84, 0x3d, 0xc2, 0x47, 0xfb)]
+interface IMFStreamSink(IMFStreamSinkVtbl): IMFMediaEventGenerator(IMFMediaEventGeneratorVtbl) {
+    fn GetMediaSink(
+        ppMediaSink: *mut *mut IMFMediaSink,
+    ) -> HRESULT,
+    fn GetIdentifier(
+        pdwIdentifier: *mut DWORD,
+    ) -> HRESULT,
+    fn GetMediaTypeHandler(
+        ppHandler: *mut *mut IMFMediaTypeHandler,
+    ) -> HRESULT,
+    fn ProcessSample(
+        pSample: *mut IMFSample,
+    ) -> HRESULT,
+    fn PlaceMarker(
+        eMarkerType: MFSTREAMSINK_MARKER_TYPE,
+        pvarMarkerValue: *const PROPVARIANT,
+        pvarContextValue: *const PROPVARIANT,
+    ) -> HRESULT,
+    fn Flush() -> HRESULT,
+}}
+RIDL! {#[uuid(0x86cbc910, 0xe533, 0x4751, 0x8e, 0x3b, 0xf1, 0x9b, 0x5b, 0x80, 0x6a, 0x03)]
+interface IMFVideoSampleAllocator(IMFVideoSampleAllocatorVtbl): IUnknown(IUnknownVtbl) {
+    fn SetDirectXManager(
+        pManager: *mut IUnknown,
+    ) -> HRESULT,
+    fn UninitializeSampleAllocator() -> HRESULT,
+    fn InitializeSampleAllocator(
+        cRequestedFrames: DWORD,
+        pMediaType: *mut IMFMediaType,
+    ) -> HRESULT,
+    fn AllocateSample(
+        ppSample: *mut *mut IMFSample,
+    ) -> HRESULT,
+}}
+RIDL! {#[uuid(0xa792cdbe, 0xc374, 0x4e89, 0x83, 0x35, 0x27, 0x8e, 0x7b, 0x99, 0x56, 0xa4)]
+interface IMFVideoSampleAllocatorNotify(IMFVideoSampleAllocatorNotifyVtbl)
+    : IUnknown(IUnknownVtbl) {
+    fn NotifyRelease() -> HRESULT,
+}}
+RIDL! {#[uuid(0x3978aa1a, 0x6d5b, 0x4b7f, 0xa3, 0x40, 0x90, 0x89, 0x91, 0x89, 0xae, 0x34)]
+interface IMFVideoSampleAllocatorNotifyEx(IMFVideoSampleAllocatorNotifyExVtbl)
+    : IMFVideoSampleAllocatorNotify(IMFVideoSampleAllocatorNotifyVtbl) {
+    fn NotifyPrune(
+        __MIDL__IMFVideoSampleAllocatorNotifyEx0000: *mut IMFSample,
+    ) -> HRESULT,
+}}
+RIDL! {#[uuid(0x992388b4, 0x3372, 0x4f67, 0x8b, 0x6f, 0xc8, 0x4c, 0x07, 0x1f, 0x47, 0x51)]
+interface IMFVideoSampleAllocatorCallback(IMFVideoSampleAllocatorCallbackVtbl)
+    : IUnknown(IUnknownVtbl) {
+    fn SetCallback(
+        pNotify: *mut IMFVideoSampleAllocatorNotify,
+    ) -> HRESULT,
+    fn GetFreeSampleCount(
+        plSamples: *mut LONG,
+    ) -> HRESULT,
+}}
+RIDL! {#[uuid(0x545b3a48, 0x3283, 0x4f62, 0x86, 0x6f, 0xa6, 0x2d, 0x8f, 0x59, 0x8f, 0x9f)]
+interface IMFVideoSampleAllocatorEx(IMFVideoSampleAllocatorExVtbl)
+    : IMFVideoSampleAllocator(IMFVideoSampleAllocatorVtbl) {
+    fn InitializeSampleAllocatorEx(
+        cInitialSamples: DWORD,
+        cMaximumSamples: DWORD,
+        pAttributes: *mut IMFAttributes,
+        pMediaType: *mut IMFMediaType,
+    ) -> HRESULT,
+}}
+RIDL! {#[uuid(0x20bc074b, 0x7a8d, 0x4609, 0x8c, 0x3b, 0x64, 0xa0, 0xa3, 0xb5, 0xd7, 0xce)]
+interface IMFDXGIDeviceManagerSource(IMFDXGIDeviceManagerSourceVtbl): IUnknown(IUnknownVtbl) {
+    fn GetManager(
+        ppManager: *mut *mut IMFDXGIDeviceManager,
+    ) -> HRESULT,
+}}
+ENUM! {enum MF_VIDEO_PROCESSOR_ROTATION {
+    ROTATION_NONE = 0,
+    ROTATION_NORMAL = 1,
+}}
+ENUM! {enum MF_VIDEO_PROCESSOR_MIRROR {
+    MIRROR_NONE = 0,
+    MIRROR_HORIZONTAL = 1,
+    MIRROR_VERTICAL = 2,
+}}
+RIDL! {#[uuid(0xa3f675d5, 0x6119, 0x4f7f, 0xa1, 0x00, 0x1d, 0x8b, 0x28, 0x0f, 0x0e, 0xfb)]
+interface IMFVideoProcessorControl(IMFVideoProcessorControlVtbl): IUnknown(IUnknownVtbl) {
+    fn SetBorderColor(
+        pBorderColor: *mut MFARGB,
+    ) -> HRESULT,
+    fn SetSourceRectangle(
+        pSrcRect: *mut RECT,
+    ) -> HRESULT,
+    fn SetDestinationRectangle(
+        pDstRect: *mut RECT,
+    ) -> HRESULT,
+    fn SetMirror(
+        eMirror: MF_VIDEO_PROCESSOR_MIRROR,
+    ) -> HRESULT,
+    fn SetRotation(
+        eRotation: MF_VIDEO_PROCESSOR_ROTATION,
+    ) -> HRESULT,
+    fn SetConstrictionSize(
+        pConstrictionSize: *mut SIZE,
+    ) -> HRESULT,
+}}
+RIDL! {#[uuid(0xbde633d3, 0xe1dc, 0x4a7f, 0xa6, 0x93, 0xbb, 0xae, 0x39, 0x9c, 0x4a, 0x20)]
+interface IMFVideoProcessorControl2(IMFVideoProcessorControl2Vtbl)
+    : IMFVideoProcessorControl(IMFVideoProcessorControlVtbl) {
+    fn SetRotationOverride(
+        uiRotation: UINT,
+    ) -> HRESULT,
+    fn EnableHardwareEffects(
+        fEnabled: BOOL,
+    ) -> HRESULT,
+    fn GetSupportedHardwareEffects(
+        puiSupport: *mut UINT,
+    ) -> HRESULT,
+}}
+ENUM! {enum MFVideoSphericalFormat {
+    MFVideoSphericalFormat_Unsupported = 0,
+    MFVideoSphericalFormat_Equirectangular = 1,
+    MFVideoSphericalFormat_CubeMap = 2,
+    MFVideoSphericalFormat_3DMesh = 3,
+}}
+ENUM! {enum MFVideoSphericalProjectionMode {
+    MFVideoSphericalProjectionMode_Spherical = 0,
+    MFVideoSphericalProjectionMode_Flat = MFVideoSphericalProjectionMode_Spherical + 1,
+}}
+RIDL! {#[uuid(0x2424b3f2, 0xeb23, 0x40f1, 0x91, 0xaa, 0x74, 0xbd, 0xde, 0xea, 0x08, 0x83)]
+interface IMFVideoProcessorControl3(IMFVideoProcessorControl3Vtbl)
+    : IMFVideoProcessorControl2(IMFVideoProcessorControl2Vtbl) {
+    fn GetNaturalOutputType(
+        ppType: *mut *mut IMFMediaType,
+    ) -> HRESULT,
+    fn EnableSphericalVideoProcessing(
+        fEnable: BOOL,
+        eFormat: MFVideoSphericalFormat,
+        eProjectionMode: MFVideoSphericalProjectionMode,
+    ) -> HRESULT,
+    fn SetSphericalVideoProperties(
+        X: c_float,
+        Y: c_float,
+        Z: c_float,
+        W: c_float,
+        fieldOfView: c_float,
+    ) -> HRESULT,
+    fn SetOutputDevice(
+        pOutputDevice: *mut IUnknown,
+    ) -> HRESULT,
+}}
+RIDL! {#[uuid(0x83cf873a, 0xf6da, 0x4bc8, 0x82, 0x3f, 0xba, 0xcf, 0xd5, 0x5d, 0xc4, 0x33)]
+interface IMFTopology(IMFTopologyVtbl): IMFAttributes(IMFAttributesVtbl) {
+    fn GetTopologyID(
+        pID: *mut TOPOID,
+    ) -> HRESULT,
+    fn AddNode(
+        pNode: *mut IMFTopologyNode,
+    ) -> HRESULT,
+    fn RemoveNode(
+        pNode: *mut IMFTopologyNode,
+    ) -> HRESULT,
+    fn GetNodeCount(
+        pwNodes: *mut WORD,
+    ) -> HRESULT,
+    fn GetNode(
+        wIndex: WORD,
+        ppNode: *mut *mut IMFTopologyNode,
+    ) -> HRESULT,
+    fn Clear() -> HRESULT,
+    fn CloneFrom(
+        pTopology: *mut IMFTopology,
+    ) -> HRESULT,
+    fn GetNodeByID(
+        qwTopoNodeID: TOPOID,
+        ppNode: *mut *mut IMFTopologyNode,
+    ) -> HRESULT,
+    fn GetSourceNodeCollection(
+        ppCollection: *mut *mut IMFCollection,
+    ) -> HRESULT,
+    fn GetOutputNodeCollection(
+        ppCollection: *mut *mut IMFCollection,
+    ) -> HRESULT,
+}}
+DEFINE_GUID! {MF_TOPOLOGY_PROJECTSTART,
+0x7ed3f802, 0x86bb, 0x4b3f, 0xb7, 0xe4, 0x7c, 0xb4, 0x3a, 0xfd, 0x4b, 0x80}
+DEFINE_GUID! {MF_TOPOLOGY_PROJECTSTOP,
+0x7ed3f803, 0x86bb, 0x4b3f, 0xb7, 0xe4, 0x7c, 0xb4, 0x3a, 0xfd, 0x4b, 0x80}
+DEFINE_GUID! {MF_TOPOLOGY_NO_MARKIN_MARKOUT,
+0x7ed3f804, 0x86bb, 0x4b3f, 0xb7, 0xe4, 0x7c, 0xb4, 0x3a, 0xfd, 0x4b, 0x80}
+ENUM! {enum MFTOPOLOGY_DXVA_NODE {
+    MFTOPOLOGY_DXVA_DEFAULT = 0,
+    MFTOPOLOGY_DXVA_NONE = 1,
+    MFTOPOLOGY_DXVA_FULL = 2,
+}}
+DEFINE_GUID! {MF_TOPOLOGY_DXVA_MODE,
+0x1e8d34f6, 0xf5ab, 0x4e23, 0xbb, 0x88, 0x87, 0x4a, 0xa3, 0xa1, 0xa7, 0x4d}
+DEFINE_GUID! {MF_TOPOLOGY_ENABLE_XVP_FOR_PLAYBACK,
+0x1967731f, 0xcd78, 0x42fc, 0xb0, 0x26, 0x9, 0x92, 0xa5, 0x6e, 0x56, 0x93}
+DEFINE_GUID! {MF_TOPOLOGY_STATIC_PLAYBACK_OPTIMIZATIONS,
+0xb86cac42, 0x41a6, 0x4b79, 0x89, 0x7a, 0x1a, 0xb0, 0xe5, 0x2b, 0x4a, 0x1b}
+DEFINE_GUID! {MF_TOPOLOGY_PLAYBACK_MAX_DIMS,
+0x5715cf19, 0x5768, 0x44aa, 0xad, 0x6e, 0x87, 0x21, 0xf1, 0xb0, 0xf9, 0xbb}
+ENUM! {enum MFTOPOLOGY_HARDWARE_NODE {
+    MFTOPOLOGY_HWMODE_SOFTWARE_ONLY = 0,
+    MFTOPOLOGY_HWMODE_USE_HARDWARE = 1,
+    MFTOPOLOGY_HWMODE_USE_ONLY_HARDWARE = 2,
+}}
+DEFINE_GUID! {MF_TOPOLOGY_HARDWARE_MODE,
+0xd2d362fd, 0x4e4f, 0x4191, 0xa5, 0x79, 0xc6, 0x18, 0xb6, 0x67, 0x6, 0xaf}
+DEFINE_GUID! {MF_TOPOLOGY_PLAYBACK_FRAMERATE,
+0xc164737a, 0xc2b1, 0x4553, 0x83, 0xbb, 0x5a, 0x52, 0x60, 0x72, 0x44, 0x8f}
+DEFINE_GUID! {MF_TOPOLOGY_DYNAMIC_CHANGE_NOT_ALLOWED,
+0xd529950b, 0xd484, 0x4527, 0xa9, 0xcd, 0xb1, 0x90, 0x95, 0x32, 0xb5, 0xb0}
+DEFINE_GUID! {MF_TOPOLOGY_ENUMERATE_SOURCE_TYPES,
+0x6248c36d, 0x5d0b, 0x4f40, 0xa0, 0xbb, 0xb0, 0xb3, 0x05, 0xf7, 0x76, 0x98}
+DEFINE_GUID! {MF_TOPOLOGY_START_TIME_ON_PRESENTATION_SWITCH,
+0xc8cc113f, 0x7951, 0x4548, 0xaa, 0xd6, 0x9e, 0xd6, 0x20, 0x2e, 0x62, 0xb3}
+DEFINE_GUID! {MF_DISABLE_LOCALLY_REGISTERED_PLUGINS,
+0x66b16da9, 0xadd4, 0x47e0, 0xa1, 0x6b, 0x5a, 0xf1, 0xfb, 0x48, 0x36, 0x34}
+DEFINE_GUID! {MF_LOCAL_PLUGIN_CONTROL_POLICY,
+0xd91b0085, 0xc86d, 0x4f81, 0x88, 0x22, 0x8c, 0x68, 0xe1, 0xd7, 0xfa, 0x04}
+extern "system" {
+    pub fn MFCreateTopology(ppTopo: *mut *mut IMFTopology) -> HRESULT;
+}
+ENUM! {enum MF_TOPOLOGY_TYPE {
+    MF_TOPOLOGY_OUTPUT_NODE = 0,
+    MF_TOPOLOGY_SOURCESTREAM_NODE = MF_TOPOLOGY_OUTPUT_NODE + 1,
+    MF_TOPOLOGY_TRANSFORM_NODE = MF_TOPOLOGY_SOURCESTREAM_NODE + 1,
+    MF_TOPOLOGY_TEE_NODE = MF_TOPOLOGY_TRANSFORM_NODE + 1,
+    MF_TOPOLOGY_MAX = 0xffffffff,
+}}
+RIDL! {#[uuid(0x83cf873a, 0xf6da, 0x4bc8, 0x82, 0x3f, 0xba, 0xcf, 0xd5, 0x5d, 0xc4, 0x30)]
+interface IMFTopologyNode(IMFTopologyNodeVtbl): IMFAttributes(IMFAttributesVtbl) {
+    fn SetObject(
+        pObject: *mut IUnknown,
+    ) -> HRESULT,
+    fn GetObject(
+        ppObject: *mut *mut IUnknown,
+    ) -> HRESULT,
+    fn GetNodeType(
+        pType: *mut MF_TOPOLOGY_TYPE,
+    ) -> HRESULT,
+    fn GetTopoNodeID(
+        pID: *mut TOPOID,
+    ) -> HRESULT,
+    fn SetTopoNodeID(
+        ullTopoID: TOPOID,
+    ) -> HRESULT,
+    fn GetInputCount(
+        pcInputs: *mut DWORD,
+    ) -> HRESULT,
+    fn GetOutputCount(
+        pcOutputs: *mut DWORD,
+    ) -> HRESULT,
+    fn ConnectOutput(
+        dwOutputIndex: DWORD,
+        pDownstreamNode: *mut IMFTopologyNode,
+        dwInputIndexOnDownstreamNode: DWORD,
+    ) -> HRESULT,
+    fn DisconnectOutput(
+        dwOutputIndex: DWORD,
+    ) -> HRESULT,
+    fn GetInput(
+        dwInputIndex: DWORD,
+        ppUpstreamNode: *mut *mut IMFTopologyNode,
+        pdwOutputIndexOnUpstreamNode: *mut DWORD,
+    ) -> HRESULT,
+    fn GetOutput(
+        dwOutputIndex: DWORD,
+        ppDownstreamNode: *mut *mut IMFTopologyNode,
+        pdwInputIndexOnDownstreamNode: *mut DWORD,
+    ) -> HRESULT,
+    fn SetOutputPrefType(
+        dwOutputIndex: DWORD,
+        pType: *mut IMFMediaType,
+    ) -> HRESULT,
+    fn GetOutputPrefType(
+        dwOutputIndex: DWORD,
+        ppType: *mut *mut IMFMediaType,
+    ) -> HRESULT,
+    fn SetInputPrefType(
+        dwInputIndex: DWORD,
+        pType: *mut IMFMediaType,
+    ) -> HRESULT,
+    fn GetInputPRefType(
+        dwInputIndex:
+        ppType: *mut *mut IMFMediaType,
+    ) -> HRESULT,
+    fn CloneFrom(
+        pNode: *mut IMFTopologyNode,
+    ) -> HRESULT,
+}}
+ENUM! {enum MF_TOPONODE_FLUSH_MODE {
+    MF_TOPONODE_FLUSH_ALWAYS = 0,
+    MF_TOPONODE_FLUSH_SEEK = MF_TOPONODE_FLUSH_ALWAYS + 1,
+    MF_TOPONODE_FLUSH_NEVER = MF_TOPONODE_FLUSH_SEEK + 1,
+}}
+DEFINE_GUID! {MF_TOPONODE_FLUSH,
+0x494bbce8, 0xb031,  0x4e38,  0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+ENUM! {enum MF_TOPONODE_DRAIN_MODE {
+    MF_TOPONODE_DRAIN_DEFAULT = 0,
+    MF_TOPONODE_DRAIN_ALWAYS = MF_TOPONODE_DRAIN_DEFAULT + 1,
+    MF_TOPONODE_DRAIN_NEVER = MF_TOPONODE_DRAIN_ALWAYS + 1,
+}}
+DEFINE_GUID! {MF_TOPONODE_DRAIN,
+0x494bbce9, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPONODE_D3DAWARE,
+0x494bbced, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPOLOGY_RESOLUTION_STATUS,
+0x494bbcde, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPONODE_ERRORCODE,
+0x494bbcee, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPONODE_CONNECT_METHOD,
+0x494bbcf1, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPONODE_LOCKED,
+0x494bbcf7, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPONODE_WORKQUEUE_ID,
+0x494bbcf8, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPONODE_WORKQUEUE_MMCSS_CLASS,
+0x494bbcf9, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPONODE_DECRYPTOR,
+0x494bbcfa, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPONODE_DISCARDABLE,
+0x494bbcfb, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPONODE_ERROR_MAJORTYPE,
+0x494bbcfd, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPONODE_ERROR_SUBTYPE,
+0x494bbcfe, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPONODE_WORKQUEUE_MMCSS_TASKID,
+0x494bbcff, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPONODE_WORKQUEUE_MMCSS_PRIORITY,
+0x5001f840, 0x2816, 0x48f4, 0x93, 0x64, 0xad, 0x1e, 0xf6, 0x61, 0xa1, 0x23}
+DEFINE_GUID! {MF_TOPONODE_WORKQUEUE_ITEM_PRIORITY,
+0xa1ff99be, 0x5e97, 0x4a53, 0xb4, 0x94, 0x56, 0x8c, 0x64, 0x2c, 0x0f, 0xf3}
+DEFINE_GUID! {MF_TOPONODE_MARKIN_HERE,
+0x494bbd00, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPONODE_MARKOUT_HERE,
+0x494bbd01, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPONODE_DECODER,
+0x494bbd02, 0xb031, 0x4e38, 0x97, 0xc4, 0xd5, 0x42, 0x2d, 0xd6, 0x18, 0xdc}
+DEFINE_GUID! {MF_TOPONODE_MEDIASTART,
+0x835c58ea, 0xe075, 0x4bc7, 0xbc, 0xba, 0x4d, 0xe0, 0x00, 0xdf, 0x9a, 0xe6}
+DEFINE_GUID! {MF_TOPONODE_MEDIASTOP,
+0x835c58eb, 0xe075, 0x4bc7, 0xbc, 0xba, 0x4d, 0xe0, 0x00, 0xdf, 0x9a, 0xe6}
+DEFINE_GUID! {MF_TOPONODE_SOURCE,
+0x835c58ec, 0xe075, 0x4bc7, 0xbc, 0xba, 0x4d, 0xe0, 0x00, 0xdf, 0x9a, 0xe6}
+DEFINE_GUID! {MF_TOPONODE_PRESENTATION_DESCRIPTOR,
+0x835c58ed, 0xe075, 0x4bc7, 0xbc, 0xba, 0x4d, 0xe0, 0x00, 0xdf, 0x9a, 0xe6}
+DEFINE_GUID! {MF_TOPONODE_STREAM_DESCRIPTOR,
+0x835c58ee, 0xe075, 0x4bc7, 0xbc, 0xba, 0x4d, 0xe0, 0x00, 0xdf, 0x9a, 0xe6}
+DEFINE_GUID! {MF_TOPONODE_SEQUENCE_ELEMENTID,
+0x835c58ef, 0xe075, 0x4bc7, 0xbc, 0xba, 0x4d, 0xe0, 0x00, 0xdf, 0x9a, 0xe6}
+DEFINE_GUID! {MF_TOPONODE_TRANSFORM_OBJECTID,
+0x88dcc0c9, 0x293e, 0x4e8b, 0x9a, 0xeb, 0xa, 0xd6, 0x4c, 0xc0, 0x16, 0xb0}
+DEFINE_GUID! {MF_TOPONODE_STREAMID,
+0x14932f9b, 0x9087, 0x4bb4, 0x84, 0x12, 0x51, 0x67, 0x14, 0x5c, 0xbe, 0x04}
+DEFINE_GUID! {MF_TOPONODE_NOSHUTDOWN_ON_REMOVE,
+0x14932f9c, 0x9087, 0x4bb4, 0x84, 0x12, 0x51, 0x67, 0x14, 0x5c, 0xbe, 0x04}
+DEFINE_GUID! {MF_TOPONODE_RATELESS,
+0x14932f9d, 0x9087, 0x4bb4, 0x84, 0x12, 0x51, 0x67, 0x14, 0x5c, 0xbe, 0x04}
+DEFINE_GUID! {MF_TOPONODE_DISABLE_PREROLL,
+0x14932f9e, 0x9087, 0x4bb4, 0x84, 0x12, 0x51, 0x67, 0x14, 0x5c, 0xbe, 0x04}
+DEFINE_GUID! {MF_TOPONODE_PRIMARYOUTPUT,
+0x6304ef99, 0x16b2, 0x4ebe, 0x9d, 0x67, 0xe4, 0xc5, 0x39, 0xb3, 0xa2, 0x59}
+extern "system" {
+    pub fn MFCreateTopologyNode(
+        NodeType: MF_TOPOLOGY_TYPE,
+        ppNode: *mut *mut IMFTopologyNode,
+    ) -> HRESULT;
+    pub fn MFGetTopoNodeCurrentType(
+        pNode: *mut IMFTopologyNode,
+        dwStreamIndex: DWORD,
+        fOutput: BOOL,
+        ppType: *mut *mut IMFMediaType,
+    ) -> HRESULT;
+}
+RIDL! {#[uuid(0xfa993888, 0x4383, 0x415a, 0xa9, 0x30, 0xdd, 0x47, 0x2a, 0x8c, 0xf6, 0xf7)]
+interface IMFGetService(IMFGetServiceVtbl): IUnknown(IUnknownVtbl) {
+    fn GetService(
+        guidService: REFGUID,
+        riid: REFIID,
+        ppvObject: *mut LPVOID,
+    ) -> HRESULT,
+}}
+extern "system" {
+    pub fn MFGetService(
+        punkObject: *mut IUnknown,
+        guidService: REFGUID,
+        riid: REFIID,
+        ppvObject: *mut LPVOID,
+    ) -> HRESULT;
+}
+pub type MFTIME = LONGLONG;
+ENUM! {enum MFCLOCK_CHARACTERISTICS_FLAGS {
+    MFCLOCK_CHARACTERISTICS_FLAG_FREQUENCY_10MHZ = 0x2,
+    MFCLOCK_CHARACTERISTICS_FLAG_ALWAYS_RUNNING = 0x4,
+    MFCLOCK_CHARACTERISTICS_FLAG_IS_SYSTEM_CLOCK = 0x8,
+}}
+ENUM! {enum MFCLOCK_STATE {
+    MFCLOCK_STATE_INVALID = 0,
+    MFCLOCK_STATE_RUNNING = MFCLOCK_STATE_INVALID + 1,
+    MFCLOCK_STATE_STOPPED = MFCLOCK_STATE_RUNNING + 1,
+    MFCLOCK_STATE_PAUSED = MFCLOCK_STATE_STOPPED + 1,
+}}
+ENUM! {enum MFCLOCK_RELATIONAL_FLAGS {
+    MFCLOCK_RELATIONAL_FLAG_JITTER_NEVER_AHEAD = 0x1,
+}}
+STRUCT! {struct MFCLOCK_PROPERTIES {
+    qwCorrelationRate: __uint64,
+    guidClockId: GUID,
+    dwClockFlags: DWORD,
+    qwClockFrequency: __uint64,
+    dwClockTolerance: DWORD,
+    dwClockJitter: DWORD,
+}}
+pub const MFCLOCK_FREQUENCY_HNS: __uint64 = 10000000;
+pub const MFCLOCK_TOLERANCE_UNKNOWN: DWORD = 50000;
+pub const MFCLOCK_JITTER_ISR: DWORD = 1000;
+pub const MFCLOCK_JITTER_DPC: DWORD = 4000;
+pub const MFCLOCK_JITTER_PASSIVE: DWORD = 10000;
+RIDL! {#[uuid(0x2eb1e945, 0x18b8, 0x4139, 0x9b, 0x1a, 0xd5, 0xd5, 0x84, 0x81, 0x85, 0x30)]
+interface IMFClock(IMFClockVtbl): IUnknown(IUnknownVtbl) {
+    fn GetClockCharacteristics(
+        pdwCharacteristics: *mut DWORD,
+    ) -> HRESULT,
+    fn GetCorrelatedTime(
+        dwReserved: DWORD,
+        pllClockTime: *mut LONGLONG,
+        phnsSystemTime: *mut MFTIME,
+    ) -> HRESULT,
+    fn GetContinuityKey(
+        pdwContinuityKey: *mut DWORD,
+    ) -> HRESULT,
+    fn GetState(
+        dwReserved: DWORD,
+        peClockState: *mut MFCLOCK_STATE,
+    ) -> HRESULT,
+    fn GetProperties(
+        pClockProperties: *mut MFCLOCK_PROPERTIES,
+    ) -> HRESULT,
+}}
+extern "system" {
+    pub fn MFGetSystemTime() -> MFTIME;
+}
+pub const PRESENTATION_CURRENT_POSITION: LONGLONG = 0x7fffffffffffffff;
+RIDL! {#[uuid(0x868ce85c, 0x8ea9, 0x4f55, 0xab, 0x82, 0xb0, 0x09, 0xa9, 0x10, 0xa8, 0x05)]
+interface IMFPresentationClock(IMFPresentationClockVtbl): IMFClock(IMFClockVtbl) {
+    fn SetTimeSource(
+        pTimeSource: *mut IMFPresentationTimeSource,
+    ) -> HRESULT,
+    fn GetTimeSource(
+        ppTimeSource: *mut *mut IMFPresentationTimeSource,
+    ) -> HRESULT,
+    fn GetTime(
+        phnsClockTime: *mut MFTIME,
+    ) -> HRESULT,
+    fn AddClockStateSink(
+        pStateSink: *mut IMFClockStateSink,
+    ) -> HRESULT,
+    fn RemoveClockStateSink(
+        pStateSink: *mut IMFClockStateSink,
+    ) -> HRESULT,
+    fn Start(
+        llClockStartOffset: LONGLONG,
+    ) -> HRESULT,
+    fn Stop() -> HRESULT,
+    fn Pause() -> HRESULT,
+}}
