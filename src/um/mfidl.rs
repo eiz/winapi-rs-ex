@@ -813,3 +813,410 @@ interface IMFPresentationClock(IMFPresentationClockVtbl): IMFClock(IMFClockVtbl)
     fn Stop() -> HRESULT,
     fn Pause() -> HRESULT,
 }}
+extern "system" {
+    pub fn MFCreatePresentationClock(
+        ppPresentationClock: *mut *mut IMFPresentationClock,
+    ) -> HRESULT;
+}
+RIDL! {#[uuid(0x7ff12cce, 0xf76f, 0x41c2, 0x86, 0x3b, 0x16, 0x66, 0xc8, 0xe5, 0xe1, 0x39)]
+interface IMFPresentationTimeSource(IMFPresentationTimeSourceVtbl): IMFClock(IMFClockVtbl) {
+    fn GetUnderlyingClock(
+        ppClock: *mut *mut IMFClock,
+    ) -> HRESULT,
+}}
+extern "system" {
+    pub fn MFCreateSystemTimeSource(
+        ppSystemTimeSource: *mut *mut IMFPresentationTimeSource,
+    ) -> HRESULT;
+}
+RIDL! {#[uuid(0xf6696e82, 0x74f7, 0x4f3d, 0xa1, 0x78, 0x8a, 0x5e, 0x09, 0xc3, 0x65, 0x9f)]
+interface IMFClockStateSink(IMFClockStateSinkVtbl): IUnknown(IUnknownVtbl) {
+    fn OnClockStart(
+        hnsSystemTime: MFTIME,
+        llClockStartOffset: LONGLONG,
+    ) -> HRESULT,
+    fn OnClockStop(
+        hnsSystemTime: MFTIME,
+    ) -> HRESULT,
+    fn OnClockPause(
+        hnsSystemTime: MFTIME,
+    ) -> HRESULT,
+    fn OnClockRestart(
+        hnsSystemTime: MFTIME,
+    ) -> HRESULT,
+    fn OnClockSetRate(
+        hnssystemTime: MFTIME,
+        flRate: c_float,
+    ) -> HRESULT,
+}}
+DEFINE_GUID! {MF_PD_PMPHOST_CONTEXT,
+0x6c990d31, 0xbb8e, 0x477a, 0x85, 0x98, 0xd, 0x5d, 0x96, 0xfc, 0xd8, 0x8a}
+DEFINE_GUID! {MF_PD_APP_CONTEXT,
+0x6c990d32, 0xbb8e, 0x477a, 0x85, 0x98, 0xd, 0x5d, 0x96, 0xfc, 0xd8, 0x8a}
+DEFINE_GUID! {MF_PD_DURATION,
+0x6c990d33, 0xbb8e, 0x477a, 0x85, 0x98, 0xd, 0x5d, 0x96, 0xfc, 0xd8, 0x8a}
+DEFINE_GUID! {MF_PD_TOTAL_FILE_SIZE,
+0x6c990d34, 0xbb8e, 0x477a, 0x85, 0x98, 0xd, 0x5d, 0x96, 0xfc, 0xd8, 0x8a}
+DEFINE_GUID! {MF_PD_AUDIO_ENCODING_BITRATE,
+0x6c990d35, 0xbb8e, 0x477a, 0x85, 0x98, 0xd, 0x5d, 0x96, 0xfc, 0xd8, 0x8a}
+DEFINE_GUID! {MF_PD_VIDEO_ENCODING_BITRATE,
+0x6c990d36, 0xbb8e, 0x477a, 0x85, 0x98, 0xd, 0x5d, 0x96, 0xfc, 0xd8, 0x8a}
+DEFINE_GUID! {MF_PD_MIME_TYPE,
+0x6c990d37, 0xbb8e, 0x477a, 0x85, 0x98, 0xd, 0x5d, 0x96, 0xfc, 0xd8, 0x8a}
+DEFINE_GUID! {MF_PD_LAST_MODIFIED_TIME,
+0x6c990d38, 0xbb8e, 0x477a, 0x85, 0x98, 0xd, 0x5d, 0x96, 0xfc, 0xd8, 0x8a}
+DEFINE_GUID! {MF_PD_PLAYBACK_ELEMENT_ID,
+0x6c990d39, 0xbb8e, 0x477a, 0x85, 0x98, 0xd, 0x5d, 0x96, 0xfc, 0xd8, 0x8a}
+DEFINE_GUID! {MF_PD_PREFERRED_LANGUAGE,
+0x6c990d3A, 0xbb8e, 0x477a, 0x85, 0x98, 0xd, 0x5d, 0x96, 0xfc, 0xd8, 0x8a}
+DEFINE_GUID! {MF_PD_PLAYBACK_BOUNDARY_TIME,
+0x6c990d3b, 0xbb8e, 0x477a, 0x85, 0x98, 0xd, 0x5d, 0x96, 0xfc, 0xd8, 0x8a}
+DEFINE_GUID! {MF_PD_AUDIO_ISVARIABLEBITRATE,
+0x33026ee0, 0xe387, 0x4582, 0xae, 0x0a, 0x34, 0xa2, 0xad, 0x3b, 0xaa, 0x18}
+DEFINE_GUID! {MF_PD_ADAPTIVE_STREAMING,
+0xEA0D5D97, 0x29F9, 0x488B, 0xAE, 0x6B, 0x7D, 0x6B, 0x41, 0x36, 0x11, 0x2B}
+RIDL! {#[uuid(0x03cb2711, 0x24d7, 0x4db6, 0xa1, 0x7f, 0xf3, 0xa7, 0xa4, 0x79, 0xa5, 0x36)]
+interface IMFPresentationDescriptor(IMFPresentationDescriptorVtbl)
+    : IMFAttributes(IMFAttributesVtbl) {
+    fn GetStreamDescriptorCount(
+        pdwDescriptorCount: *mut DWORD,
+    ) -> HRESULT,
+    fn GetStreamDescriptorByIndex(
+        dwIndex: DWORD,
+        pfSelected: *mut BOOL,
+        ppDescriptor: *mut *mut IMFStreamDescriptor,
+    ) -> HRESULT,
+    fn SelectStream(
+        dwDescriptorIndex: DWORD,
+    ) -> HRESULT,
+    fn DeselectStream(
+        dwDescriptorIndex: DWORD,
+    ) -> HRESULT,
+    fn Clone(
+        ppPresentationDescriptor: *mut *mut IMFPresentationDescriptor,
+    ) -> HRESULT,
+}}
+extern "system" {
+    pub fn MFCreatePresentationDescriptor(
+        cStreamDescriptors: DWORD,
+        apStreamDescriptors: *mut *mut IMFStreamDescriptor,
+        ppPresentationDescriptor: *mut *mut IMFPresentationDescriptor,
+    ) -> HRESULT;
+    pub fn MFRequireProtectedEnvironment(
+        pPresentationDescriptor: *mut IMFPresentationDescriptor,
+    ) -> HRESULT;
+    pub fn MFSerializePresentationDescriptor(
+        pPD: *mut IMFPresentationDescriptor,
+        pcbData: *mut DWORD,
+        ppbData: *mut *mut BYTE,
+    ) -> HRESULT;
+    pub fn MFDeserializePresentationDescriptor(
+        cbData: DWORD,
+        pbData: *mut BYTE,
+        ppPD: *mut *mut IMFPresentationDescriptor,
+    ) -> HRESULT;
+}
+DEFINE_GUID! {MF_SD_LANGUAGE,
+0xaf2180, 0xbdc2, 0x423c, 0xab, 0xca, 0xf5, 0x3, 0x59, 0x3b, 0xc1, 0x21}
+DEFINE_GUID! {MF_SD_PROTECTED,
+0xaf2181, 0xbdc2, 0x423c, 0xab, 0xca, 0xf5, 0x3, 0x59, 0x3b, 0xc1, 0x21}
+DEFINE_GUID! {MF_SD_STREAM_NAME,
+0x4f1b099d, 0xd314, 0x41e5, 0xa7, 0x81, 0x7f, 0xef, 0xaa, 0x4c, 0x50, 0x1f}
+DEFINE_GUID! {MF_SD_MUTUALLY_EXCLUSIVE,
+0x23ef79c, 0x388d, 0x487f, 0xac, 0x17, 0x69, 0x6c, 0xd6, 0xe3, 0xc6, 0xf5}
+RIDL! {#[uuid(0x56c03d9c, 0x9dbb, 0x45f5, 0xab, 0x4b, 0xd8, 0x0f, 0x47, 0xc0, 0x59, 0x38)]
+interface IMFStreamDescriptor(IMFStreamDescriptorVtbl): IMFAttributes(IMFAttributesVtbl) {
+    fn GetStreamIdentifier(
+        pdwStreamIdentifier: *mut DWORD,
+    ) -> HRESULT,
+    fn GetMediaTypeHandler(
+        ppMediaTypeHandler: *mut *mut IMFMediaTypeHandler,
+    ) -> HRESULT,
+}}
+extern "system" {
+    pub fn MFCreateStreamDescriptor(
+        dwStreamIdentifier: DWORD,
+        cMediaTypes: DWORD,
+        apMediaTypes: *mut *mut IMFMediaType,
+        ppDescriptor: *mut *mut IMFStreamDescriptor,
+    ) -> HRESULT;
+}
+RIDL! {#[uuid(0xe93dcf6c, 0x4b07, 0x4e1e, 0x81, 0x23, 0xaa, 0x16, 0xed, 0x6e, 0xad, 0xf5)]
+interface IMFMediaTypeHandler(IMFMediaTypeHandlerVtbl): IUnknown(IUnknownVtbl) {
+    fn IsMediaTypeSupported(
+        pMediaType: *mut IMFMediaType,
+        ppMediaType: *mut *mut IMFMediaType,
+    ) -> HRESULT,
+    fn GetMediaTypeCount(
+        pdwTypeCount: *mut DWORD,
+    ) -> HRESULT,
+    fn GetMediaTypeByIndex(
+        dwIndex: DWORD,
+        ppType: *mut *mut IMFMediaType,
+    ) -> HRESULT,
+    fn SetCurrentMediaType(
+        pMediaType: *mut IMFMediaType,
+    ) -> HRESULT,
+    fn GetCurrentMediaType(
+        ppMediaType: *mut *mut IMFMediaType,
+    ) -> HRESULT,
+    fn GetMajorType(
+        pguidMajorType: *mut GUID,
+    ) -> HRESULT,
+}}
+extern "system" {
+    pub fn MFCreateSimpleTypeHandler(ppHandler: *mut *mut IMFMediaTypeHandler) -> HRESULT;
+}
+ENUM! {enum MFTIMER_FLAGS {
+    MFTIMER_RELATIVE = 0x1,
+}}
+RIDL! {#[uuid(0xe56e4cbd, 0x8f70, 0x49d8, 0xa0, 0xf8, 0xed, 0xb3, 0xd6, 0xab, 0x9b, 0xf2)]
+interface IMFTimer(IMFTimerVtbl): IUnknown(IUnknownVtbl) {
+    fn SetTimer(
+        dwFlags: DWORD,
+        llClockTime: LONGLONG,
+        pCallback: *mut IMFAsyncCallback,
+        punkState: *mut IUnknown,
+        ppunkKey: *mut *mut IUnknown,
+    ) -> HRESULT,
+    fn CancelTimer(
+        punkKey: *mut IUnknown,
+    ) -> HRESULT,
+}}
+DEFINE_GUID! {MF_ACTIVATE_CUSTOM_VIDEO_MIXER_CLSID,
+0xba491360, 0xbe50, 0x451e, 0x95, 0xab, 0x6d, 0x4a, 0xcc, 0xc7, 0xda, 0xd8}
+DEFINE_GUID! {MF_ACTIVATE_CUSTOM_VIDEO_MIXER_ACTIVATE,
+0xba491361, 0xbe50, 0x451e, 0x95, 0xab, 0x6d, 0x4a, 0xcc, 0xc7, 0xda, 0xd8}
+DEFINE_GUID! {MF_ACTIVATE_CUSTOM_VIDEO_MIXER_FLAGS,
+0xba491362, 0xbe50, 0x451e, 0x95, 0xab, 0x6d, 0x4a, 0xcc, 0xc7, 0xda, 0xd8}
+DEFINE_GUID! {MF_ACTIVATE_CUSTOM_VIDEO_PRESENTER_CLSID,
+0xba491364, 0xbe50, 0x451e, 0x95, 0xab, 0x6d, 0x4a, 0xcc, 0xc7, 0xda, 0xd8}
+DEFINE_GUID! {MF_ACTIVATE_CUSTOM_VIDEO_PRESENTER_ACTIVATE,
+0xba491365, 0xbe50, 0x451e, 0x95, 0xab, 0x6d, 0x4a, 0xcc, 0xc7, 0xda, 0xd8}
+DEFINE_GUID! {MF_ACTIVATE_CUSTOM_VIDEO_PRESENTER_FLAGS,
+0xba491366, 0xbe50, 0x451e, 0x95, 0xab, 0x6d, 0x4a, 0xcc, 0xc7, 0xda, 0xd8}
+ENUM! {enum __MIDL___MIDL_itf_mfidl_0000_0028_0001 {
+    MF_ACTIVATE_CUSTOM_MIXER_ALLOWFAIL = 0x1,
+}}
+ENUM! {enum __MIDL___MIDL_itf_mfidl_0000_0028_0002 {
+    MF_ACTIVATE_CUSTOM_PRESENTER_ALLOWFAIL = 0x1,
+}}
+DEFINE_GUID! {MF_ACTIVATE_MFT_LOCKED,
+0xc1f6093c, 0x7f65, 0x4fbd, 0x9e, 0x39, 0x5f, 0xae, 0xc3, 0xc4, 0xfb, 0xd7}
+DEFINE_GUID! {MF_ACTIVATE_VIDEO_WINDOW,
+0x9a2dbbdd, 0xf57e, 0x4162, 0x82, 0xb9, 0x68, 0x31, 0x37, 0x76, 0x82, 0xd3}
+ENUM! {enum MFSHUTDOWN_STATUS {
+    MFSHUTDOWN_INITIATED = 0,
+    MFSHUTDOWN_COMPLETED = (MFSHUTDOWN_INITIATED + 1),
+}}
+RIDL! {#[uuid(0x97ec2ea4, 0x0e42, 0x4937, 0x97, 0xac, 0x9d, 0x6d, 0x32, 0x88, 0x24, 0xe1)]
+interface IMFShutdown(IMFShutdownVtbl): IUnknown(IUnknownVtbl) {
+    fn Shutdown() -> HRESULT,
+    fn GetShutdownStatus(
+        pStatus: *mut MFSHUTDOWN_STATUS,
+    ) -> HRESULT,
+}}
+extern "system" {
+    pub fn MFShutdownObject(pUnk: *mut IUnknown) -> HRESULT;
+    pub fn MFCreateAudioRenderer(pAudioAttributes: *mut IMFAttributes) -> HRESULT;
+    pub fn MFCreateAudioRendererActivate(ppActivate: *mut *mut IMFActivate) -> HRESULT;
+}
+DEFINE_GUID! {MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS,
+0xede4b5e0, 0xf805, 0x4d6c, 0x99, 0xb3, 0xdb, 0x01, 0xbf, 0x95, 0xdf, 0xab}
+DEFINE_GUID! {MF_AUDIO_RENDERER_ATTRIBUTE_SESSION_ID,
+0xede4b5e3, 0xf805, 0x4d6c, 0x99, 0xb3, 0xdb, 0x01, 0xbf, 0x95, 0xdf, 0xab}
+DEFINE_GUID! {MF_AUDIO_RENDERER_ATTRIBUTE_ENDPOINT_ID,
+0xb10aaec3, 0xef71, 0x4cc3, 0xb8, 0x73, 0x5, 0xa9, 0xa0, 0x8b, 0x9f, 0x8e}
+DEFINE_GUID! {MF_AUDIO_RENDERER_ATTRIBUTE_ENDPOINT_ROLE,
+0x6ba644ff, 0x27c5, 0x4d02, 0x98, 0x87, 0xc2, 0x86, 0x19, 0xfd, 0xb9, 0x1b}
+DEFINE_GUID! {MF_AUDIO_RENDERER_ATTRIBUTE_STREAM_CATEGORY,
+0xa9770471, 0x92ec, 0x4df4, 0x94, 0xfe, 0x81, 0xc3, 0x6f, 0xc, 0x3a, 0x7a}
+extern "system" {
+    pub fn MFCreateVideoRendererActivate(
+        hwndVideo: HWND,
+        ppActivate: *mut *mut IMFActivate,
+    ) -> HRESULT;
+    pub fn MFCreateMPEG4MediaSink(
+        pIByteStream: *mut IMFByteStream,
+        pVideoMediaType: *mut IMFMediaType,
+        pAudioMediaType: *mut IMFMediaType,
+        ppIMediaSink: *mut *mut IMFMediaSink,
+    ) -> HRESULT;
+    pub fn MFCreate3GPMediaSink(
+        pIByteStream: *mut IMFByteStream,
+        pVideoMediaType: *mut IMFMediaType,
+        pAudioMediaType: *mut IMFMediaType,
+        ppIMediaSink: *mut *mut IMFMediaSink,
+    ) -> HRESULT;
+    pub fn MFCreateMP3MediaSink(
+        pTargetByteStream: *mut IMFByteStream,
+        ppMediaSink: *mut *mut IMFMediaSink,
+    ) -> HRESULT;
+    pub fn MFCreateAC3MediaSink(
+        pTargetByteStream: *mut IMFByteStream,
+        pAudioMediaType: *mut IMFMediaType,
+        ppMediaSink: *mut *mut IMFMediaSink,
+    ) -> HRESULT;
+    pub fn MFCreateADTSMediaSink(
+        pTargetByteStream: *mut IMFByteStream,
+        pAudioMediaType: *mut IMFMediaType,
+        ppMediaSink: *mut *mut IMFMediaSink,
+    ) -> HRESULT;
+    pub fn MFCreateMuxSink(
+        guidOutputSubType: GUID,
+        pOutputAttributes: *mut IMFAttributes,
+        pOutputByteStream: *mut IMFByteStream,
+        ppMuxSink: *mut *mut IMFMediaSink,
+    ) -> HRESULT;
+    pub fn MFCreateFMPEG4MediaSink(
+        pIByteStream: *mut IMFByteStream,
+        pVideoMediaType: *mut IMFMediaType,
+        pAudioMediaType: *mut IMFAudioMediaType,
+        ppIMediaSink: *mut *mut IMFMediaSink,
+    ) -> HRESULT;
+    pub fn MFCreateAVIMediaSink(
+        pIByteStream: *mut IMFByteStream,
+        pVideoMediaType: *mut IMFMediaType,
+        pAudioMediaType: *mut IMFMediaType,
+        ppIMediaSink: *mut *mut IMFMediaSink,
+    ) -> HRESULT;
+    pub fn MFCreateWAVEMediaSink(
+        pTargetByteStream: *mut IMFByteStream,
+        pAudioMediaType: *mut IMFMediaType,
+        ppMediaSink: *mut *mut IMFMediaSink,
+    ) -> HRESULT;
+}
+RIDL! {#[uuid(0xde9a6157, 0xf660, 0x4643, 0xb5, 0x6a, 0xdf, 0x9f, 0x79, 0x98, 0xc7, 0xcd)]
+interface IMFTopoLoader(IMFTopoLoaderVtbl): IUnknown(IUnknownVtbl) {
+    fn Load(
+        pInputTopo: *mut IMFTopology,
+        ppOutputTopo: *mut IMFTopology,
+        pCurrentTopo: *mut IMFTopology,
+    ) -> HRESULT,
+}}
+extern "system" {
+    pub fn MFCreateTopoLoader(ppObj: *mut *mut IMFTopoLoader) -> HRESULT;
+}
+RIDL! {#[uuid(0xacf92459, 0x6a61, 0x42bd, 0xb5, 0x7c, 0xb4, 0x3e, 0x51, 0x20, 0x3c, 0xb0)]
+interface IMFContentProtectionManager(IMFContentProtectionManagerVtbl): IUnknown(IUnknownVtbl) {
+    fn BeginEnableContent(
+        pEnablerActivate: *mut IMFActivate,
+        pTopo: *mut IMFTopology,
+        pCallback: *mut IMFAsyncCallback,
+        punkState: *mut IUnknown,
+    ) -> HRESULT,
+    fn EndEnableContent(
+        pResult: *mut IMFAsyncResult,
+    ) -> HRESULT,
+}}
+ENUM! {enum MF_URL_TRUST_STATUS {
+    MF_LICENSE_URL_UNTRUSTED = 0,
+    MF_LICENSE_URL_TRUSTED = MF_LICENSE_URL_UNTRUSTED + 1,
+    MF_LICENSE_URL_TAMPERED = MF_LICENSE_URL_TRUSTED + 1,
+}}
+RIDL! {#[uuid(0xd3c4ef59, 0x49ce, 0x4381, 0x90, 0x71, 0xd5, 0xbc, 0xd0, 0x44, 0xc7, 0x70)]
+interface IMFContentEnabler(IMFContentEnablerVtbl): IUnknown(IUnknownVtbl) {
+    fn GetEnableType(
+        pType: *mut GUID,
+    ) -> HRESULT,
+    fn GetEnableURL(
+        ppwszURL: *mut LPWSTR,
+        pcchURL: *mut DWORD,
+        pTrustStatus: *mut MF_URL_TRUST_STATUS,
+    ) -> HRESULT,
+    fn GetEnableData(
+        ppbData: *mut *mut BYTE,
+        pcbData: *mut DWORD,
+    ) -> HRESULT,
+    fn IsAutomaticSupported(
+        pfAutomatic: *mut BOOL,
+    ) -> HRESULT,
+    fn AutomaticEnable() -> HRESULT,
+    fn MonitorEnable() -> HRESULT,
+    fn Cancel() -> HRESULT,
+}}
+DEFINE_GUID! {MFENABLETYPE_WMDRMV1_LicenseAcquisition,
+0x4ff6eeaf, 0xb43, 0x4797, 0x9b, 0x85, 0xab, 0xf3, 0x18, 0x15, 0xe7, 0xb0}
+DEFINE_GUID! {MFENABLETYPE_WMDRMV7_LicenseAcquisition,
+0x3306df, 0x4a06, 0x4884,0xa0, 0x97, 0xef, 0x6d, 0x22, 0xec, 0x84, 0xa3}
+DEFINE_GUID! {MFENABLETYPE_WMDRMV7_Individualization,
+0xacd2c84a, 0xb303, 0x4f65, 0xbc, 0x2c, 0x2c, 0x84, 0x8d, 0x1, 0xa9, 0x89}
+DEFINE_GUID! {MFENABLETYPE_MF_UpdateRevocationInformation,
+0xe558b0b5, 0xb3c4, 0x44a0, 0x92, 0x4c, 0x50, 0xd1, 0x78, 0x93, 0x23, 0x85}
+DEFINE_GUID! {MFENABLETYPE_MF_UpdateUntrustedComponent,
+0x9879f3d6, 0xcee2, 0x48e6, 0xb5, 0x73, 0x97, 0x67, 0xab, 0x17, 0x2f, 0x16}
+DEFINE_GUID! {MFENABLETYPE_MF_RebootRequired,
+0x6d4d3d4b, 0x0ece, 0x4652, 0x8b, 0x3a, 0xf2, 0xd2, 0x42, 0x60, 0xd8, 0x87}
+pub const MF_USER_MODE_COMPONENT_LOAD: DWORD = 0x00000001;
+pub const MF_KERNEL_MODE_COMPONENT_LOAD: DWORD = 0x00000002;
+pub const MF_GRL_LOAD_FAILED: DWORD = 0x00000010;
+pub const MF_INVALID_GRL_SIGNATURE: DWORD = 0x00000020;
+pub const MF_GRL_ABSENT: DWORD = 0x00001000;
+pub const MF_COMPONENT_REVOKED: DWORD = 0x00002000;
+pub const MF_COMPONENT_INVALID_EKU: DWORD = 0x00004000;
+pub const MF_COMPONENT_CERT_REVOKED: DWORD = 0x00008000;
+pub const MF_COMPONENT_INVALID_ROOT: DWORD = 0x00010000;
+pub const MF_COMPONENT_HS_CERT_REVOKED: DWORD = 0x00020000;
+pub const MF_COMPONENT_LS_CERT_REVOKED: DWORD = 0x00040000;
+pub const MF_BOOT_DRIVER_VERIFICATION_FAILED: DWORD = 0x00100000;
+pub const MF_TEST_SIGNED_COMPONENT_LOADING: DWORD = 0x01000000;
+pub const MF_MINCRYPT_FAILURE: DWORD = 0x10000000;
+pub const SHA_HASH_LEN: usize = 20;
+pub const STR_HASH_LEN: usize = SHA_HASH_LEN * 2 + 3;
+STRUCT! {struct MFRR_COMPONENT_HASH_INFO {
+    ulReason: DWORD,
+    rgHeaderHash: [WCHAR; STR_HASH_LEN],
+    rgPublicKeyHash: [WCHAR; STR_HASH_LEN],
+    wszName: [WCHAR; MAX_PATH],
+}}
+pub type PMFRR_COMPONENT_HASH_INFO = *mut MFRR_COMPONENT_HASH_INFO;
+STRUCT! {struct MFRR_COMPONENTS {
+    dwRRInfoVersion: DWORD,
+    dwRRComponents: DWORD,
+    pRRComponents: PMFRR_COMPONENT_HASH_INFO,
+}}
+pub type PMFRR_COMPONENTS = *mut MFRR_COMPONENTS;
+STRUCT! {#[repr(packed)] struct ASF_FLAT_PICTURE {
+    bPictureType: BYTE,
+    dwDataLen: DWORD,
+}}
+STRUCT! {#[repr(packed)] struct ASF_FLAT_SYNCHRONIZED_LYRICS {
+    bTimeStampFormat: BYTE,
+    bContentType: BYTE,
+    dwLyricsLen: DWORD,
+}}
+RIDL! {#[uuid(0xf88cfb8c, 0xef16, 0x4991, 0xb4, 0x50, 0xcb, 0x8c, 0x69, 0xe5, 0x17, 0x04)]
+interface IMFMetadata(IMFMetadataVtbl): IUnknown(IUnknownVtbl) {
+    fn SetLanguage(
+        pwszRFC1766: LPCWSTR,
+    ) -> HRESULT,
+    fn GetLanguage(
+        ppwszRFC1766: *mut LPWSTR,
+    ) -> HRESULT,
+    fn GetAllLanguages(
+        ppvLanguages: *mut PROPVARIANT,
+    ) -> HRESULT,
+    fn SetProperty(
+        pwszName: LPCWSTR,
+        ppvValue: *const PROPVARIANT,
+    ) -> HRESULT,
+    fn GetProperty(
+        pwszName: LPCWSTR,
+        ppvValue: *mut PROPVARIANT,
+    ) -> HRESULT,
+    fn DeleteProperty(
+        pwszName: LPCWSTR,
+    ) -> HRESULT,
+    fn GetAllPropertyNames(
+        ppvNames: *mut PROPVARIANT,
+    ) -> HRESULT,
+}}
+RIDL! {#[uuid(0x56181d2d, 0xe221, 0x4adb, 0xb1, 0xc8, 0x3c, 0xee, 0x6a, 0x53, 0xf7, 0x6f)]
+interface IMFMetadataProvider(IMFMetadataProviderVtbl): IUnknown(IUnknownVtbl) {
+    fn GetMFMetadata(
+        pPresentationDescriptor: *mut IMFPresentationDescriptor,
+        dwStreamIdentifier: DWORD,
+        dwFlags: DWORD,
+        ppMFMetadata: *mut *mut IMFMetadata,
+    ) -> HRESULT,
+}}

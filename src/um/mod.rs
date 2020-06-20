@@ -301,6 +301,8 @@ pub mod mediaobj;
 pub mod memoryapi;
 #[cfg(feature = "mfapi")]
 pub mod mfapi;
+#[cfg(feature = "mfidl")]
+pub mod mfidl;
 #[cfg(feature = "mfobjects")]
 pub mod mfobjects;
 #[cfg(feature = "mftransform")]

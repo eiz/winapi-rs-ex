@@ -250,6 +250,7 @@ const DATA: &'static [(&'static str, &'static [&'static str], &'static [&'static
     ("mediaobj", &["guiddef", "minwindef", "strmif", "unknwnbase", "winnt"], &[]),
     ("memoryapi", &["basetsd", "minwinbase", "minwindef", "winnt"], &["kernel32"]),
     ("mfapi", &["basetsd", "d3d9types", "dxgiformat", "guiddef", "mediaobj", "mfobjects", "minwinbase", "minwindef", "mmreg", "propidl", "unknwnbase", "vcruntime", "windef", "wingdi", "winnt"], &["mfplat"]),
+    ("mfidl", &[], &["mfplat"]),
     ("mfobjects", &["basetsd", "guiddef", "minwindef", "mmreg", "objidlbase", "propidl", "unknwnbase", "windef", "wingdi", "winnt", "wtypes"], &["mfplat"]),
     ("mftransform", &["basetsd", "guiddef", "mfobjects", "minwindef", "unknwnbase", "winnt", "wtypes"], &["mfplat"]),
     ("minschannel", &["guiddef", "minwindef", "wincrypt", "winnt"], &[]),
